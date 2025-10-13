@@ -11,7 +11,7 @@ type TCategoriesState = {
 type TCategoriesActions = {
     fetchCategories: (group?: boolean) => Promise<void>,
     fetchCategoryById: (categoryId: string) => Promise<void>
-    // addCategory: () => void,
+    addCategory: (data: Category) => void,
     // modifyCategory: () => void,
     // deleteCategory: () => void,
 }
@@ -26,7 +26,7 @@ export type TCategoriesSlice = TCategoriesState & TCategoriesActions;
 
 export const createCategoriesSlice: StateCreator<
     TCategoriesSlice,
-    [],
+    [['zustand/immer', never]],
     [],
     TCategoriesSlice
 > = (set) => ({
@@ -51,6 +51,19 @@ export const createCategoriesSlice: StateCreator<
             console.log('fetchCategoryById: risposta ricevuta', { res });
             set({ category: res, isLoading: false });
         } catch (error) {
+            console.error('fetchCategoryById: errore catturato', error);
+            set({ isLoading: false });
+        }
+    },
+    addCategory: async (data: Category): Promise<void> => {
+        console.log('addCategory: chiamata iniziata', { data });
+        set({ isLoading: true });
+        try {
+            const res = await categoriesService.create(data);
+            console.log('addCategory: risposta ricevuta', { res });
+            set(s => ({
+                categories: [...s.categories, res]
+            }));
         } catch (error) {
             console.error('fetchCategoryById: errore catturato', error);
             set({ isLoading: false });
