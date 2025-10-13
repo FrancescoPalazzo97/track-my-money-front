@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { Category } from "../types/api.types";
+import type { Category, CategoryUpdate } from "../types/api.types";
 import { categoriesService } from "../services";
 
 type TCategoriesState = {
@@ -10,10 +10,10 @@ type TCategoriesState = {
 
 type TCategoriesActions = {
     fetchCategories: (group?: boolean) => Promise<void>,
-    fetchCategoryById: (categoryId: string) => Promise<void>
-    addCategory: (data: Category) => void,
-    // modifyCategory: () => void,
-    // deleteCategory: () => void,
+    fetchCategoryById: (categoryId: string) => Promise<void>,
+    addCategory: (data: Category) => Promise<void>,
+    modifyCategory: (categoryId: string, data: CategoryUpdate) => Promise<void>,
+    deleteCategory: (categoryId: string) => Promise<void>,
 }
 
 const initialState: TCategoriesState = {
@@ -65,7 +65,35 @@ export const createCategoriesSlice: StateCreator<
                 categories: [...s.categories, res]
             }));
         } catch (error) {
-            console.error('fetchCategoryById: errore catturato', error);
+            console.error('addCategory: errore catturato', error);
+            set({ isLoading: false });
+        }
+    },
+    modifyCategory: async (categoryId: string, data: CategoryUpdate): Promise<void> => {
+        console.log('addCategory: chiamata iniziata', { data });
+        set({ isLoading: true });
+        try {
+            const res = await categoriesService.update(categoryId, data);
+            console.log('modifyCategory: risposta ricevuta', { res });
+            set(s => ({
+                categories: [...s.categories, res]
+            }));
+        } catch (error) {
+            console.error('modifyCategory: errore catturato', error);
+            set({ isLoading: false });
+        }
+    },
+    deleteCategory: async (categoryId: string): Promise<void> => {
+        console.log('deleteCategory: chiamata iniziata', { categoryId });
+        set({ isLoading: true });
+        try {
+            await categoriesService.delete(categoryId);
+            console.log('deleteCategory: risposta ricevuta');
+            set(s => ({
+                categories: s.categories.filter(cat => cat._id !== categoryId)
+            }));
+        } catch (error) {
+            console.error('deleteCategory: errore catturato', error);
             set({ isLoading: false });
         }
     }
