@@ -1,71 +1,40 @@
-// Common types
-export type Currency = string; // e.g., 'EUR', 'USD', etc.
+import type z from "zod";
+import type { CategoryInputSchema, CategoryTypeSchema, CategoryUpdateSchema, CurrencySchema, GetTransactionsQuerySchema, TransactionInputSchema, TransactionUpdateSchema } from "../schemas/api.schemas";
 
-export type CategoryType = 'income' | 'expense';
+// Common types
+export type Currency = z.infer<typeof CurrencySchema>; // e.g., 'EUR', 'USD', etc.
+
+export type CategoryType = z.infer<typeof CategoryTypeSchema>;
 
 // Category types
-export type Category = {
+export type Category = z.infer<
+  typeof CategoryInputSchema
+> & {
   _id: string;
-  name: string;
-  type: CategoryType;
-  description?: string;
-  parentCategory?: string;
   subCategories?: Category[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
-export type CategoryInput = {
-  name: string;
-  type: CategoryType;
-  description?: string;
-  parentCategory?: string;
-}
+export type CategoryInput = z.infer<typeof CategoryInputSchema>;
 
-export type CategoryUpdate = {
-  name?: string;
-  type?: CategoryType;
-  description?: string;
-  parentCategory?: string;
-}
+export type CategoryUpdate = z.infer<typeof CategoryUpdateSchema>;
 
 // Transaction types
-export type Transaction = {
+export type Transaction = z.infer<
+  typeof TransactionInputSchema
+> & {
   _id: string;
-  title: string;
-  description?: string;
-  transactionDate: string;
-  amount: number;
-  currency: Currency;
-  category: string | Category;
   amountInEUR?: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export type TransactionInput = {
-  title: string;
-  description?: string;
-  transactionDate: string;
-  amount: number;
-  currency: Currency;
-  category: string;
-}
+export type TransactionInput = z.infer<typeof TransactionInputSchema>;
 
-export type TransactionUpdate = {
-  title?: string;
-  description?: string;
-  transactionDate?: string;
-  amount?: number;
-  currency?: Currency;
-  category?: string;
-}
+export type TransactionUpdate = z.infer<typeof TransactionUpdateSchema>;
 
-export type GetTransactionsQuery = {
-  startDate: string;
-  endDate: string;
-  baseCurrency?: Currency;
-}
+export type GetTransactionsQuery = z.infer<typeof GetTransactionsQuerySchema>;
 
 // API Response types
 export type ApiResponse<T> = {

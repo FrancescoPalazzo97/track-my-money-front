@@ -4,7 +4,6 @@ import type {
   TransactionInput,
   TransactionUpdate,
   GetTransactionsQuery,
-  ApiResponse,
 } from '../types/api.types';
 
 export const transactionsService = {
@@ -13,10 +12,10 @@ export const transactionsService = {
    * @param query - Must include startDate and endDate, optionally baseCurrency
    */
   getAll: async (query: GetTransactionsQuery): Promise<Transaction[]> => {
-    const response = await apiClient.get<ApiResponse<Transaction[]>>('/transactions', {
+    const response = await apiClient.get<Transaction[]>('/transactions', {
       params: query,
     });
-    return response.data.data || [];
+    return response.data || [];
   },
 
   /**
@@ -26,38 +25,38 @@ export const transactionsService = {
    */
   getById: async (id: string, baseCurrency?: string): Promise<Transaction> => {
     const params = baseCurrency ? { baseCurrency } : undefined;
-    const response = await apiClient.get<ApiResponse<Transaction>>(`/transactions/${id}`, {
+    const response = await apiClient.get<Transaction>(`/transactions/${id}`, {
       params,
     });
-    if (!response.data.data) {
+    if (!response.data) {
       throw new Error('Transazione non trovata');
     }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Create new transaction
    */
   create: async (data: TransactionInput): Promise<Transaction> => {
-    const response = await apiClient.post<ApiResponse<Transaction>>('/transactions', data);
-    if (!response.data.data) {
+    const response = await apiClient.post<Transaction>('/transactions', data);
+    if (!response.data) {
       throw new Error('Errore nella creazione della transazione');
     }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Update transaction
    */
   update: async (id: string, data: TransactionUpdate): Promise<Transaction> => {
-    const response = await apiClient.patch<ApiResponse<Transaction>>(
+    const response = await apiClient.patch<Transaction>(
       `/transactions/${id}`,
       data
     );
-    if (!response.data.data) {
+    if (!response.data) {
       throw new Error("Errore nell'aggiornamento della transazione");
     }
-    return response.data.data;
+    return response.data;
   },
 
   /**
