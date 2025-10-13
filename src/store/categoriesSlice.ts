@@ -1,11 +1,12 @@
 import type { StateCreator } from "zustand";
 import type { Category, CategoryUpdate } from "../types/api.types";
 import { categoriesService } from "../services";
+import type { TStore } from "../types/store";
 
 type TCategoriesState = {
     categories: Category[],
     category: Category | null,
-    isLoading: boolean
+    isLoadingCategory: boolean
 }
 
 type TCategoriesActions = {
@@ -19,7 +20,7 @@ type TCategoriesActions = {
 const initialState: TCategoriesState = {
     categories: [],
     category: null,
-    isLoading: false,
+    isLoadingCategory: false,
 }
 
 export type TCategoriesSlice = TCategoriesState & TCategoriesActions;
@@ -31,33 +32,33 @@ export const createCategoriesSlice: StateCreator<
     TCategoriesSlice
 > = (set) => ({
     ...initialState,
-    fetchCategories: async (group?: boolean) => {
+    fetchCategories: async (group?) => {
         console.log('fetchCategories: chiamata iniziata', { group });
-        set({ isLoading: true });
+        set({ isLoadingCategory: true });
         try {
             const res = await categoriesService.getAll(group);
             console.log('fetchCategories: risposta ricevuta', { res, length: res.length });
-            set({ categories: res, isLoading: false });
+            set({ categories: res, isLoadingCategory: false });
         } catch (error) {
             console.error('fetchCategories: errore catturato', error);
-            set({ isLoading: false });
+            set({ isLoadingCategory: false });
         }
     },
-    fetchCategoryById: async (categoryId: string): Promise<void> => {
+    fetchCategoryById: async (categoryId) => {
         console.log('fetchCategoryById: chiamata iniziata', { categoryId });
-        set({ isLoading: true });
+        set({ isLoadingCategory: true });
         try {
             const res = await categoriesService.getById(categoryId);
             console.log('fetchCategoryById: risposta ricevuta', { res });
-            set({ category: res, isLoading: false });
+            set({ category: res, isLoadingCategory: false });
         } catch (error) {
             console.error('fetchCategoryById: errore catturato', error);
-            set({ isLoading: false });
+            set({ isLoadingCategory: false });
         }
     },
-    addCategory: async (data: Category): Promise<void> => {
+    addCategory: async (data) => {
         console.log('addCategory: chiamata iniziata', { data });
-        set({ isLoading: true });
+        set({ isLoadingCategory: true });
         try {
             const res = await categoriesService.create(data);
             console.log('addCategory: risposta ricevuta', { res });
@@ -66,12 +67,12 @@ export const createCategoriesSlice: StateCreator<
             }));
         } catch (error) {
             console.error('addCategory: errore catturato', error);
-            set({ isLoading: false });
+            set({ isLoadingCategory: false });
         }
     },
-    modifyCategory: async (categoryId: string, data: CategoryUpdate): Promise<void> => {
+    modifyCategory: async (categoryId, data) => {
         console.log('addCategory: chiamata iniziata', { data });
-        set({ isLoading: true });
+        set({ isLoadingCategory: true });
         try {
             const res = await categoriesService.update(categoryId, data);
             console.log('modifyCategory: risposta ricevuta', { res });
@@ -80,12 +81,12 @@ export const createCategoriesSlice: StateCreator<
             }));
         } catch (error) {
             console.error('modifyCategory: errore catturato', error);
-            set({ isLoading: false });
+            set({ isLoadingCategory: false });
         }
     },
-    deleteCategory: async (categoryId: string): Promise<void> => {
+    deleteCategory: async (categoryId) => {
         console.log('deleteCategory: chiamata iniziata', { categoryId });
-        set({ isLoading: true });
+        set({ isLoadingCategory: true });
         try {
             await categoriesService.delete(categoryId);
             console.log('deleteCategory: risposta ricevuta');
@@ -94,7 +95,7 @@ export const createCategoriesSlice: StateCreator<
             }));
         } catch (error) {
             console.error('deleteCategory: errore catturato', error);
-            set({ isLoading: false });
+            set({ isLoadingCategory: false });
         }
     }
 })
