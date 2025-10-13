@@ -3,7 +3,8 @@ import type { Category } from "../types/api.types";
 import { categoriesService } from "../services";
 
 type TCategoriesState = {
-    data: Category | Category[] | null,
+    categories: Category[],
+    category: Category | null,
     isLoading: boolean
 }
 
@@ -15,8 +16,9 @@ type TCategoriesActions = {
     // deleteCategory: () => void,
 }
 
-const initialState = {
-    data: null,
+const initialState: TCategoriesState = {
+    categories: [],
+    category: null,
     isLoading: false,
 }
 
@@ -35,7 +37,7 @@ export const createCategoriesSlice: StateCreator<
         try {
             const res = await categoriesService.getAll(group);
             console.log('fetchCategories: risposta ricevuta', { res, length: res.length });
-            set({ data: res, isLoading: false });
+            set({ categories: res, isLoading: false });
         } catch (error) {
             console.error('fetchCategories: errore catturato', error);
             set({ isLoading: false });
@@ -47,7 +49,8 @@ export const createCategoriesSlice: StateCreator<
         try {
             const res = await categoriesService.getById(categoryId);
             console.log('fetchCategoryById: risposta ricevuta', { res });
-            set({ data: res, isLoading: false });
+            set({ category: res, isLoading: false });
+        } catch (error) {
         } catch (error) {
             console.error('fetchCategoryById: errore catturato', error);
             set({ isLoading: false });

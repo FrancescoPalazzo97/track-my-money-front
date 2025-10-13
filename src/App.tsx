@@ -4,7 +4,8 @@ import { ca } from "zod/locales";
 
 function App() {
 
-  const categories = useStore(s => s.data);
+  const categories = useStore(s => s.categories);
+  const category = useStore(s => s.category);
   const fetchCategories = useStore(s => s.fetchCategories);
   const isLoading = useStore(s => s.isLoading);
   const fetchCategoryById = useStore(s => s.fetchCategoryById);
@@ -19,12 +20,12 @@ function App() {
   return (
     <>
       <ul>
-        {(categories && typeof categories === 'object' && !Array.isArray(categories)) && (
+        {category && (
           <li>
             <h1 className="text-2xl">
-              {categories.name}
+              {category.name}
             </h1>
-            <p>{categories.type}</p>
+            <p>{category.type}</p>
           </li>
         )}
         {Array.isArray(categories) && categories.map(c => (
