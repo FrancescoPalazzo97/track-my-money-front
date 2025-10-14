@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
 import { transactionsService } from "../services";
 import type { GetTransactionsQuery, Transaction, TransactionInput, TransactionUpdate } from "../types/api.types";
+import type { TStore } from "../types/store";
 
 type TTransactionsState = {
     transactions: Transaction[],
@@ -25,7 +26,7 @@ const initialState: TTransactionsState = {
 export type TTransactionsSlice = TTransactionsState & TTransactionsActions;
 
 export const createTransactionsSlice: StateCreator<
-    TTransactionsSlice,
+    TStore,
     [['zustand/immer', never]],
     [],
     TTransactionsSlice

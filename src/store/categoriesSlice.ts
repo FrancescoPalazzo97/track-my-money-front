@@ -26,7 +26,7 @@ const initialState: TCategoriesState = {
 export type TCategoriesSlice = TCategoriesState & TCategoriesActions;
 
 export const createCategoriesSlice: StateCreator<
-    TCategoriesSlice,
+    TStore,
     [['zustand/immer', never]],
     [],
     TCategoriesSlice

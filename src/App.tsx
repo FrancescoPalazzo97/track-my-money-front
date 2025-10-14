@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useStore } from "./store/useStore"
-import { ca } from "zod/locales";
 
 function App() {
 
@@ -9,10 +8,13 @@ function App() {
   const fetchCategories = useStore(s => s.fetchCategories);
   const isLoading = useStore(s => s.isLoadingCategory);
   const fetchCategoryById = useStore(s => s.fetchCategoryById);
+  const fetchTransactions = useStore(s => s.fetchTransactions);
+  const transactions = useStore(s => s.transactions);
 
   useEffect(() => {
     fetchCategories();
-  }, [fetchCategories]);
+    fetchTransactions({ startDate: '2025-10-01', endDate: '2025-10-31', baseCurrency: 'EUR' })
+  }, [fetchCategories, fetchTransactions]);
 
 
   if (isLoading) return <>Caricamento...</>
@@ -28,12 +30,22 @@ function App() {
             <p>{category.type}</p>
           </li>
         )}
-        {Array.isArray(categories) && categories.map(c => (
+        {categories.map(c => (
           <li key={c._id}>
             <h1 className="text-2xl">
               {c.name}
             </h1>
             <p>{c.type}</p>
+          </li>
+        ))}
+        <h2 className="text-3xl">Spese</h2>
+        {transactions.map(t => (
+          <li key={t._id}>
+            <h1 className="text-2xl">
+              {t.title}
+            </h1>
+            <p>{t.amount}</p>
+            <p>{t.amountInEUR}</p>
           </li>
         ))}
       </ul>
