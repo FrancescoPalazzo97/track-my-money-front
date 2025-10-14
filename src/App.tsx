@@ -11,7 +11,7 @@ function App() {
   const fetchCategoryById = useStore(s => s.fetchCategoryById);
 
   useEffect(() => {
-    fetchCategoryById('68e569bafc10cc06e90779d5');
+    fetchCategories();
   }, [fetchCategories]);
 
 
