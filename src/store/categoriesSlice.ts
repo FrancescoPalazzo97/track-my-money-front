@@ -77,7 +77,7 @@ export const createCategoriesSlice: StateCreator<
             const res = await categoriesService.update(categoryId, data);
             console.log('modifyCategory: risposta ricevuta', { res });
             set(s => ({
-                categories: [...s.categories, res]
+                categories: s.categories.map(c => c._id === res._id ? res : c)
             }));
         } catch (error) {
             console.error('modifyCategory: errore catturato', error);

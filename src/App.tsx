@@ -7,7 +7,7 @@ function App() {
   const categories = useStore(s => s.categories);
   const category = useStore(s => s.category);
   const fetchCategories = useStore(s => s.fetchCategories);
-  const isLoading = useStore(s => s.isLoading);
+  const isLoading = useStore(s => s.isLoadingCategory);
   const fetchCategoryById = useStore(s => s.fetchCategoryById);
 
   useEffect(() => {
