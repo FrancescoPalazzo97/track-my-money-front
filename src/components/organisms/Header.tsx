@@ -16,6 +16,17 @@ const Header = () => {
                         </Link>
                     </div>
                 </div>
+                <ul className='flex gap-1.5'>
+                    <li>
+                        <Link to={'/'}>Home</Link>
+                    </li>
+                    <li>
+                        <Link to={'/settings'}>Impostazioni</Link>
+                    </li>
+                    <li>
+                        <Link to={'/categories'}>Categorie</Link>
+                    </li>
+                </ul>
             </nav>
         </header>
     )
