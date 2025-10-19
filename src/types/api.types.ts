@@ -21,9 +21,16 @@ export type CategoryInput = z.infer<typeof CategoryInputSchema>;
 export type CategoryUpdate = z.infer<typeof CategoryUpdateSchema>;
 
 // Transaction types
-export type Transaction = z.infer<
-  typeof TransactionInputSchema
-> & {
+export type Transaction = {
+  title: string;
+  transactionDate: string;
+  amount: number;
+  currency: string;
+  category: {
+    _id: string;
+    type: 'expense' | 'income';
+  };
+  description?: string | undefined;
   _id: string;
   amountInEUR?: number;
   createdAt: string;

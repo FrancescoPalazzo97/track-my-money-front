@@ -3,6 +3,7 @@ import DefaultLayout from "./layouts/DefaultLayout"
 import HomePage from "./pages/HomePage"
 import Settings from "./pages/Settings"
 import CategoriesPage from "./pages/CategoriesPage"
+import ModifyCatsPage from "./pages/ModifyCatsPage"
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
           <Route index Component={HomePage} />
           <Route path="/settings" Component={Settings} />
           <Route path="/categories" Component={CategoriesPage} />
+          <Route path="/modify-categories" Component={ModifyCatsPage} />
         </Route>
       </Routes>
     </BrowserRouter>

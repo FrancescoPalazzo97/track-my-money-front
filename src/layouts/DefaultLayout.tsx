@@ -14,7 +14,7 @@ const DefaultLayout = () => {
             endDate: '2025-10-31',
             baseCurrency: 'EUR'
         });
-        fetchCategories(true);
+        fetchCategories();
     }, []);
 
     return (

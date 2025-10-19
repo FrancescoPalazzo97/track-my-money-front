@@ -63,7 +63,8 @@ export const createCategoriesSlice: StateCreator<
             const res = await categoriesService.create(data);
             console.log('addCategory: risposta ricevuta', { res });
             set(s => ({
-                categories: [...s.categories, res]
+                categories: [...s.categories, res],
+                isLoadingCategory: false
             }));
         } catch (error) {
             console.error('addCategory: errore catturato', error);
@@ -77,8 +78,10 @@ export const createCategoriesSlice: StateCreator<
             const res = await categoriesService.update(categoryId, data);
             console.log('modifyCategory: risposta ricevuta', { res });
             set(s => ({
-                categories: s.categories.map(c => c._id === res._id ? res : c)
+                categories: s.categories.map(c => c._id === res._id ? res : c),
+                isLoadingCategory: false
             }));
+            console.log('response settata!')
         } catch (error) {
             console.error('modifyCategory: errore catturato', error);
             set({ isLoadingCategory: false });
@@ -91,7 +94,8 @@ export const createCategoriesSlice: StateCreator<
             await categoriesService.delete(categoryId);
             console.log('deleteCategory: risposta ricevuta');
             set(s => ({
-                categories: s.categories.filter(cat => cat._id !== categoryId)
+                categories: s.categories.filter(cat => cat._id !== categoryId),
+                isLoadingCategory: false
             }));
         } catch (error) {
             console.error('deleteCategory: errore catturato', error);

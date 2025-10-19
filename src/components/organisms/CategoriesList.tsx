@@ -1,10 +1,10 @@
 import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
-import { Loader2, TrendingDown, TrendingUp, Triangle } from 'lucide-react';
 import CategoriesCard from '../molecules/CategoriesCard';
 import Loader from '../molecules/Loader';
 import EmptyListComponent from '../molecules/EmptyListComponent';
-import Accordion from '../molecules/Accordion';
+import { useMemo } from 'react';
+import { getGroupedCategories } from '../../lib/utility';
 
 const CategoriesList = () => {
 
@@ -15,13 +15,19 @@ const CategoriesList = () => {
         }))
     );
 
+    const groupedCategories = useMemo(
+        () => getGroupedCategories(categories),
+        [categories]
+    );
+
     if (isLoading) {
         return (
             <Loader />
         )
     }
 
-    if (categories.length === 0) {
+
+    if (groupedCategories.length === 0) {
         return (
             <EmptyListComponent
                 content={'Nessuna categoria trovata'}
@@ -30,16 +36,14 @@ const CategoriesList = () => {
     }
 
     return (
-        <>
-            <ul className='space-y-3'>
-                {categories.map(cat => (
-                    <CategoriesCard
-                        key={cat._id}
-                        category={cat}
-                    />
-                ))}
-            </ul>
-        </>
+        <ul className='space-y-3'>
+            {groupedCategories.map(cat => (
+                <CategoriesCard
+                    key={cat._id}
+                    category={cat}
+                />
+            ))}
+        </ul>
     )
 }
 

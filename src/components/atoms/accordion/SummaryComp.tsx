@@ -2,25 +2,15 @@ import { Triangle } from "lucide-react"
 import LabelCat from "../labels/LabelCat";
 
 type Props = {
-    title: string,
-    type: "income" | "expense";
-    isOpen?: boolean;
+    children: React.ReactNode
 }
 
-const SummaryComp = ({ title, type, isOpen = false }: Props) => {
+const SummaryComp = ({ children }: Props) => {
     return (
         <summary
             className="cursor-pointer list-none flex items-center justify-between gap-4"
         >
-            <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                <Triangle />
-            </span>
-            <span
-                className='text-slate-300 font-medium text-lg truncate'
-            >
-                {title}
-            </span>
-            <LabelCat type={type} />
+            {children}
         </summary>
     )
 }
