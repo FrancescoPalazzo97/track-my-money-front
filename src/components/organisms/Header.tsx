@@ -4,7 +4,7 @@ import { Settings } from 'lucide-react'
 const Header = () => {
 
     return (
-        <header className='fixed inset-x-0 top-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/50 shadow-xl'>
+        <header className='fixed inset-x-0 top-0 z-50 bg-slate-950/50 backdrop-blur-md border-b border-slate-800/50 shadow-xl'>
             <nav className='py-3 px-4'>
                 <div className='mx-auto'>
                     <div className='relative mb-4'>

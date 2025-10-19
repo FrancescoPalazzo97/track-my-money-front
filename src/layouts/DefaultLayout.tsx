@@ -14,13 +14,13 @@ const DefaultLayout = () => {
             endDate: '2025-10-31',
             baseCurrency: 'EUR'
         });
-        fetchCategories();
+        fetchCategories(true);
     }, []);
 
     return (
         <>
             <Header />
-            <main className="pt-[96px]">
+            <main className="min-h-screen pt-[96px]">
                 <Outlet />
             </main>
         </>
