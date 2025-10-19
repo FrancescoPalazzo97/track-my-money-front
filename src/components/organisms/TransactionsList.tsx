@@ -1,30 +1,34 @@
-import { useEffect } from 'react'
-import TransactionCard from '../molecules/TransactionCard'
-import { useStore } from '../../store/useStore'
-import { useShallow } from 'zustand/shallow'
+import TransactionCard from '../molecules/TransactionCard';
+import { store } from '../../store/store';
+import { useShallow } from 'zustand/shallow';
+import Loader from '../molecules/Loader';
+import EmptyListComponent from '../molecules/EmptyListComponent';
 
 const TransactionsList = () => {
 
-    const { transactions, fetchTransactions, isLoading } = useStore(
+    const { transactions, isLoading } = store(
         useShallow(s => ({
             transactions: s.transactions,
-            fetchTransactions: s.fetchTransactions,
             isLoading: s.isLoadingTransaction
         }))
-    )
+    );
 
-    useEffect(() => {
-        fetchTransactions({
-            startDate: '2025-10-01',
-            endDate: '2025-10-31',
-            baseCurrency: 'EUR'
-        });
-    }, []);
+    if (isLoading) {
+        return (
+            <Loader />
+        )
+    }
 
-    if (isLoading) return <>Caricamento...</>
+    if (transactions.length === 0) {
+        return (
+            <EmptyListComponent
+                content={'Nessun movimento trovato'}
+            />
+        )
+    }
 
     return (
-        <ul>
+        <ul className='space-y-3'>
             {transactions.map(t => (
                 <TransactionCard key={t._id} transaction={t} />
             ))}

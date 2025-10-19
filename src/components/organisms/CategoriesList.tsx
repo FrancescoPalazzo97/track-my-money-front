@@ -1,32 +1,45 @@
-import React, { useEffect } from 'react'
-import { useStore } from '../../store/useStore';
+import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
+import { Loader2, TrendingDown, TrendingUp, Triangle } from 'lucide-react';
+import CategoriesCard from '../molecules/CategoriesCard';
+import Loader from '../molecules/Loader';
+import EmptyListComponent from '../molecules/EmptyListComponent';
+import Accordion from '../molecules/Accordion';
 
 const CategoriesList = () => {
 
-    const { categories, fetchCategories, isLoading } = useStore(
+    const { categories, isLoading } = store(
         useShallow(s => ({
             categories: s.categories,
-            fetchCategories: s.fetchCategories,
             isLoading: s.isLoadingCategory
         }))
-    )
+    );
 
-    useEffect(() => {
-        fetchCategories();
-    }, []);
+    if (isLoading) {
+        return (
+            <Loader />
+        )
+    }
 
-    if (isLoading) return <>Caricamento...</>
+    if (categories.length === 0) {
+        return (
+            <EmptyListComponent
+                content={'Nessuna categoria trovata'}
+            />
+        )
+    }
 
     return (
-        <ul>
-            {categories.map(cat => (
-                <li key={cat._id}>
-                    <h3>{cat.name}</h3>
-                    <p>{cat.type}</p>
-                </li>
-            ))}
-        </ul>
+        <>
+            <ul className='space-y-3'>
+                {categories.map(cat => (
+                    <CategoriesCard
+                        key={cat._id}
+                        category={cat}
+                    />
+                ))}
+            </ul>
+        </>
     )
 }
 

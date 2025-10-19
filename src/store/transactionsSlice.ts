@@ -2,6 +2,7 @@ import type { StateCreator } from "zustand";
 import { transactionsService } from "../services";
 import type { GetTransactionsQuery, Transaction, TransactionInput, TransactionUpdate } from "../types/api.types";
 import type { TStore } from "../types/store";
+import dayjs from "dayjs";
 
 type TTransactionsState = {
     transactions: Transaction[],
@@ -25,6 +26,12 @@ const initialState: TTransactionsState = {
 
 export type TTransactionsSlice = TTransactionsState & TTransactionsActions;
 
+const baseQuery = {
+    startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
+    endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+    baseCurrency: 'EUR'
+}
+
 export const createTransactionsSlice: StateCreator<
     TStore,
     [['zustand/immer', never]],
@@ -32,7 +39,7 @@ export const createTransactionsSlice: StateCreator<
     TTransactionsSlice
 > = (set) => ({
     ...initialState,
-    fetchTransactions: async (query) => {
+    fetchTransactions: async (query = baseQuery) => {
         console.log('fetchTransactions: chiamata iniziata', { query });
         set({ isLoadingTransaction: true });
         try {

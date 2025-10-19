@@ -4,7 +4,7 @@ import { createCategoriesSlice } from './categoriesSlice';
 import { createTransactionsSlice } from './transactionsSlice';
 import { immer } from 'zustand/middleware/immer';
 
-export const useStore = create<TStore>()(
+export const store = create<TStore>()(
     immer((...a) => ({
         ...createCategoriesSlice(...a),
         ...createTransactionsSlice(...a)
