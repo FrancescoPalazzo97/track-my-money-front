@@ -10,14 +10,12 @@ export const CategoryTypeSchema = z.enum(['income', 'expense']);
 export const CategoryInputSchema = z.object({
   name: z.string().min(1, "Il nome della categoria è obbligatorio"),
   type: CategoryTypeSchema,
-  description: z.string().optional(),
   parentCategory: z.string().optional(),
 });
 
 export const CategoryUpdateSchema = z.object({
   name: z.string().min(1, "Il nome della categoria è obbligatorio").optional(),
   type: CategoryTypeSchema.optional(),
-  description: z.string().optional(),
   parentCategory: z.string().optional(),
 }).strict();
 

@@ -1,23 +1,46 @@
-import { store } from "../store/store"
-import { Pencil, Trash2, TrendingDown, TrendingUp } from "lucide-react"
-import { useShallow } from "zustand/shallow"
-import BaseButton from "../components/atoms/buttons/BaseButton";
+import { store } from "../store/store";
+import { Pencil, Trash2, TrendingDown, TrendingUp } from "lucide-react";
+import { useShallow } from "zustand/shallow";
 import Loader from "../components/molecules/Loader";
 import EmptyListComponent from "../components/molecules/EmptyListComponent";
+import { CategoryUpdateSchema } from "../schemas/api.schemas";
+import type { Category } from "../types/api.types";
+import Modal from "../components/organisms/Modal";
+import Form from "../components/organisms/Form";
 
 const ModifyCatsPage = () => {
 
-    const { categories, isLoading, modifyCategory } = store(
+    const {
+        categories, isLoading,
+        modifyCategory,
+        showModal, openModal, closeModal,
+        categoryName, type, parentCategory,
+        categoryToModify, setInitialValue
+    } = store(
         useShallow(s => ({
             categories: s.categories,
             isLoading: s.isLoadingCategory,
-            modifyCategory: s.modifyCategory
+            modifyCategory: s.modifyCategory,
+            showModal: s.showModal,
+            openModal: s.openModal,
+            closeModal: s.closeModal,
+            categoryName: s.categoryName,
+            type: s.type,
+            parentCategory: s.parentCategory,
+            setInitialValue: s.setInitialValue,
+            categoryToModify: s.categoryId
         }))
     );
 
-    const handleEdit = (categoryId: string) => {
-        // TODO: Implementare logica di modifica
-        console.log('Edit category:', categoryId);
+    const handleEdit = (category: Category) => {
+        setInitialValue(
+            category._id,
+            category.name,
+            category.type,
+            category.parentCategory
+        );
+        openModal();
+        console.log('Edit category:', category);
     };
 
     const handleDelete = (categoryId: string) => {
@@ -26,20 +49,26 @@ const ModifyCatsPage = () => {
     };
 
     const saveModify = async () => {
-        const promises = [];
-        for (const cat of categories) {
-            const input = document.getElementById(`categoryName-${cat._id}`);
-            if (!input || !(input instanceof HTMLInputElement)) {
-                throw new Error(`Value non disponibile!`);
-            }
-            const newName = input.value.trim();
-            if (newName && newName !== cat.name) {
-                promises.push(modifyCategory(cat._id, { name: newName }))
-            }
+        console.log(categoryName, type, parentCategory)
+        let newData = {};
+        if (categoryName) {
+            newData = { ...newData, name: categoryName }
         }
-        console.log('Effettuo promesse')
-        await Promise.all(promises);
-        console.log('Promesse effettuate')
+        if (type) {
+            newData = { ...newData, type }
+        }
+        if (parentCategory) {
+            newData = { ...newData, parentCategory }
+        }
+        const validateData = CategoryUpdateSchema.safeParse(newData);
+
+        if (validateData.success) {
+            console.log(validateData.data)
+            await modifyCategory(categoryToModify, validateData.data)
+            closeModal();
+        } else {
+            console.error(validateData.error)
+        }
     }
 
     if (isLoading) return <Loader />;
@@ -53,7 +82,15 @@ const ModifyCatsPage = () => {
     }
 
     return (
+
         <div className="px-4 pb-6">
+            <Modal
+                show={showModal}
+                title="Modifica categoria"
+                content={<Form />}
+                undo={closeModal}
+                done={saveModify}
+            />
             <div className="max-w-2xl mx-auto">
                 <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
                     Modifica categorie
@@ -84,16 +121,11 @@ const ModifyCatsPage = () => {
                                             placeholder={cat.name}
                                             defaultValue={cat.name}
                                         />
-                                        {cat.description && (
-                                            <p className='text-slate-400 text-sm truncate'>
-                                                {cat.description}
-                                            </p>
-                                        )}
                                     </div>
                                 </div>
                                 <div className='flex items-center gap-2 flex-shrink-0'>
                                     <button
-                                        onClick={() => handleEdit(cat._id)}
+                                        onClick={() => handleEdit(cat)}
                                         className='p-2 rounded-lg bg-slate-800/50 hover:bg-cyan-500/20 text-slate-400 hover:text-cyan-400 border border-slate-700/50 hover:border-cyan-500/30 transition-all duration-200'
                                         aria-label='Modifica categoria'
                                     >
@@ -111,13 +143,6 @@ const ModifyCatsPage = () => {
                         </li>
                     ))}
                 </ul>
-                <BaseButton
-                    fullWidth
-                    onClick={saveModify}
-                    className="mt-3"
-                >
-                    Salva Modifiche
-                </BaseButton>
             </div>
         </div>
     )

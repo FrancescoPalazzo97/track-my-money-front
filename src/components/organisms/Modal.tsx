@@ -1,5 +1,5 @@
-import { createPortal } from "react-dom"
-import BaseButton from "../atoms/buttons/BaseButton"
+import { createPortal } from "react-dom";
+import BaseButton from "../atoms/buttons/BaseButton";
 
 type Props = {
     title: string,
@@ -10,21 +10,34 @@ type Props = {
 }
 
 const Modal = ({ title, content, show, undo, done }: Props) => {
-    return createPortal((
-        <div className="bg-black/50 backdrop-blur-xl p-4 absolute inset-0 flex justify-center items-center">
-            <div className="max-w-[640px] bg-slate-800/50 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-slate-700/50 ring-1 ring-slate-600/20 px-8 py-4">
-                <div className={`text-center pb-4 border-b border-slate-700/30`}>
-                    <span className={`text-slate-200 uppercase text-xl`}>{title}</span>
+    return show && createPortal((
+        <div className="bg-black/70 backdrop-blur-md p-4 fixed inset-0 flex justify-center items-center z-50">
+            <div className="w-full max-w-2xl bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/50 overflow-hidden">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/50">
+                    <h2 className="text-xl font-semibold text-slate-100">
+                        {title}
+                    </h2>
                 </div>
-                <div className=" py-4 border-b border-slate-700/30">
-                    <span className="text-slate-200">{content}</span>
+
+                {/* Content */}
+                <div className="px-6 py-6">
+                    {content}
                 </div>
-                <div className="flex justify-center pt-4">
-                    <BaseButton>
-                        Conferma modifiche
+
+                {/* Footer */}
+                <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800/50 bg-slate-950/50">
+                    <BaseButton
+                        onClick={undo}
+                        variant="secondary"
+                    >
+                        Annulla
                     </BaseButton>
-                    <BaseButton>
-                        Annulla modifiche
+                    <BaseButton
+                        onClick={done}
+                        variant="success"
+                    >
+                        Conferma
                     </BaseButton>
                 </div>
             </div>
