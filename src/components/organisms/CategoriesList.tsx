@@ -1,10 +1,10 @@
 import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
-import CategoriesCard from '../molecules/CategoriesCard';
 import Loader from '../molecules/Loader';
 import EmptyListComponent from '../molecules/EmptyListComponent';
 import { useMemo } from 'react';
 import { getGroupedCategories } from '../../lib/utility';
+import GroupedCategoriesCard from '../molecules/cards/GroupedCategoriesCard';
 
 const CategoriesList = () => {
 
@@ -38,7 +38,7 @@ const CategoriesList = () => {
     return (
         <ul className='space-y-3'>
             {groupedCategories.map(cat => (
-                <CategoriesCard
+                <GroupedCategoriesCard
                     key={cat._id}
                     category={cat}
                 />

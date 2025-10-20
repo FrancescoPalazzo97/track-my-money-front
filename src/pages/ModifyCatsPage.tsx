@@ -7,6 +7,8 @@ import { CategoryUpdateSchema } from "../schemas/api.schemas";
 import type { Category } from "../types/api.types";
 import Modal from "../components/organisms/Modal";
 import Form from "../components/organisms/Form";
+import DefaultButton from "../components/atoms/buttons/DefaultButton";
+import CategoriesCard from "../components/molecules/cards/CategoriesCard";
 
 const ModifyCatsPage = () => {
 
@@ -97,50 +99,12 @@ const ModifyCatsPage = () => {
                 </h2>
                 <ul className='space-y-3'>
                     {categories.map(cat => (
-                        <li
+                        <CategoriesCard
                             key={cat._id}
-                            className='bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl p-4 hover:border-slate-700/50 transition-all duration-200'
-                        >
-                            <div className='flex items-center justify-between gap-4'>
-                                <div className='flex items-center gap-3 flex-1 min-w-0'>
-                                    <div className={`p-2 rounded-lg ${cat.type === 'income'
-                                        ? 'bg-emerald-500/10 text-emerald-400'
-                                        : 'bg-red-500/10 text-red-400'
-                                        }`}>
-                                        {cat.type === 'income' ? (
-                                            <TrendingUp className='w-5 h-5' />
-                                        ) : (
-                                            <TrendingDown className='w-5 h-5' />
-                                        )}
-                                    </div>
-                                    <div className='flex-1 min-w-0'>
-                                        <input
-                                            type="text"
-                                            id={`categoryName-${cat._id}`}
-                                            className='text-slate-100 font-medium text-lg truncate'
-                                            placeholder={cat.name}
-                                            defaultValue={cat.name}
-                                        />
-                                    </div>
-                                </div>
-                                <div className='flex items-center gap-2 flex-shrink-0'>
-                                    <button
-                                        onClick={() => handleEdit(cat)}
-                                        className='p-2 rounded-lg bg-slate-800/50 hover:bg-cyan-500/20 text-slate-400 hover:text-cyan-400 border border-slate-700/50 hover:border-cyan-500/30 transition-all duration-200'
-                                        aria-label='Modifica categoria'
-                                    >
-                                        <Pencil className='w-4 h-4' />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(cat._id)}
-                                        className='p-2 rounded-lg bg-slate-800/50 hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-slate-700/50 hover:border-red-500/30 transition-all duration-200'
-                                        aria-label='Elimina categoria'
-                                    >
-                                        <Trash2 className='w-4 h-4' />
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
+                            category={cat}
+                            handleEdit={handleEdit}
+                            handleDelete={handleDelete}
+                        />
                     ))}
                 </ul>
             </div>

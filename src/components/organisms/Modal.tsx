@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import BaseButton from "../atoms/buttons/BaseButton";
+import DefaultButton from "../atoms/buttons/DefaultButton";
 
 type Props = {
     title: string,
@@ -27,23 +27,22 @@ const Modal = ({ title, content, show, undo, done }: Props) => {
 
                 {/* Footer */}
                 <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800/50 bg-slate-950/50">
-                    <BaseButton
+                    <DefaultButton
                         onClick={undo}
                         variant="secondary"
                     >
                         Annulla
-                    </BaseButton>
-                    <BaseButton
+                    </DefaultButton>
+                    <DefaultButton
                         onClick={done}
-                        variant="success"
+                        variant="emerald"
                     >
                         Conferma
-                    </BaseButton>
+                    </DefaultButton>
                 </div>
             </div>
         </div>
-    ), document.body
-    )
+    ), document.body)
 }
 
 export default Modal

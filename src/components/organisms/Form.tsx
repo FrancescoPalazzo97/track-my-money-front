@@ -1,6 +1,7 @@
 import { useShallow } from "zustand/shallow";
 import { store } from "../../store/store"
 import { TrendingDown, TrendingUp } from "lucide-react";
+import DefaultButton from "../atoms/buttons/DefaultButton";
 
 const Form = () => {
 
@@ -44,26 +45,24 @@ const Form = () => {
                     Tipo categoria
                 </label>
                 <div className="flex gap-3">
-                    <button
+                    <DefaultButton
                         onClick={() => setType('expense')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${type === 'expense'
-                            ? 'bg-red-500/20 text-red-400 border-2 border-red-500/40 shadow-lg shadow-red-500/10'
-                            : 'bg-slate-800/50 text-slate-400 border border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
-                            }`}
+                        variant={type === 'expense' ? 'red' : 'secondary'}
+                        size="lg"
+                        className="flex-1 flex items-center justify-center border-2 gap-2"
                     >
                         <TrendingDown className="w-5 h-5" />
                         <span>Uscita</span>
-                    </button>
-                    <button
+                    </DefaultButton>
+                    <DefaultButton
                         onClick={() => setType('income')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${type === 'income'
-                            ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/10'
-                            : 'bg-slate-800/50 text-slate-400 border border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
-                            }`}
+                        variant={type === 'income' ? 'emerald' : 'secondary'}
+                        size="lg"
+                        className="flex-1 flex items-center justify-center border-2 gap-2"
                     >
                         <TrendingUp className="w-5 h-5" />
                         <span>Entrata</span>
-                    </button>
+                    </DefaultButton>
                 </div>
             </div>
 

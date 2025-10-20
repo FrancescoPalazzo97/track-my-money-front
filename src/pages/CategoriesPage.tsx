@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom"
-import BaseButton from "../components/atoms/buttons/BaseButton"
-import CategoriesList from "../components/organisms/CategoriesList"
+import { Link } from "react-router-dom";
+import CategoriesList from "../components/organisms/CategoriesList";
+import DefaultButton from "../components/atoms/buttons/DefaultButton";
 
 const CategoriesPage = () => {
     return (
@@ -11,9 +11,12 @@ const CategoriesPage = () => {
                 </h2>
                 <div className='flex mb-3 gap-2'>
                     <Link to='/modify-categories'>
-                        <BaseButton>
+                        <DefaultButton
+                            variant="emerald"
+                            size="lg"
+                        >
                             Modifica
-                        </BaseButton>
+                        </DefaultButton>
                     </Link>
                 </div>
                 <CategoriesList />
