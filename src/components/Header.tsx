@@ -1,6 +1,5 @@
-import { NavLink } from 'react-router-dom';
 import { Settings } from 'lucide-react';
-import BaseNavLink from './BaseNavLink';
+import BaseNavLink from './ui/BaseNavLink';
 
 const Header = () => {
     return (
@@ -13,7 +12,7 @@ const Header = () => {
                         </h1>
                         <div className='absolute top-0 right-0 bottom-0 flex items-center'>
                             <BaseNavLink
-                                address='/settings'
+                                to='/settings'
                             >
                                 <Settings className='w-5 h-5' />
                             </BaseNavLink>
@@ -22,14 +21,14 @@ const Header = () => {
                     <ul className='flex gap-2 justify-center'>
                         <li>
                             <BaseNavLink
-                                address='/'
+                                to='/'
                             >
                                 Home
                             </BaseNavLink>
                         </li>
                         <li>
                             <BaseNavLink
-                                address='/categories'
+                                to='/categories'
                             >
                                 Categorie
                             </BaseNavLink>

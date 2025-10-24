@@ -1,15 +1,15 @@
 import { NavLink } from "react-router-dom"
 
 type Props = {
-    address: string,
+    to: string,
     children: React.ReactNode,
     className?: string
 }
 
-const BaseNavLink = ({ address, children, className }: Props) => {
+const BaseNavLink = ({ to, children, className }: Props) => {
     return (
         <NavLink
-            to={address}
+            to={to}
             className={({ isActive }) =>
                 `px-4 py-2 rounded-lg font-medium transition-all duration-200 ${isActive
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
