@@ -4,16 +4,15 @@ import Loader from "../components/molecules/Loader";
 import EmptyListComponent from "../components/molecules/EmptyListComponent";
 import { CategoryUpdateSchema } from "../schemas/api.schemas";
 import type { Category } from "../types/api.types";
-import Modal from "../components/organisms/Modal";
-import Form from "../components/organisms/Form";
 import CategoriesCard from "../components/molecules/cards/CategoriesCard";
+import EditCategoryForm from "../components/organisms/forms/EditCategoryForm";
 
 const ModifyCatsPage = () => {
 
     const {
         categories, isLoading,
         modifyCategory, deleteCategory,
-        showModal, openModal, closeModal,
+        openModal, closeModal,
         categoryName, type, parentCategory,
         categoryToModify, setInitialValue
     } = store(
@@ -22,7 +21,6 @@ const ModifyCatsPage = () => {
             isLoading: s.isLoadingCategory,
             modifyCategory: s.modifyCategory,
             deleteCategory: s.deleteCategory,
-            showModal: s.showModal,
             openModal: s.openModal,
             closeModal: s.closeModal,
             categoryName: s.categoryName,
@@ -32,22 +30,6 @@ const ModifyCatsPage = () => {
             categoryToModify: s.categoryId
         }))
     );
-
-    const handleEdit = (category: Category) => {
-        setInitialValue(
-            category._id,
-            category.name,
-            category.type,
-            category.parentCategory
-        );
-        openModal();
-        console.log('Edit category:', category);
-    };
-
-    const handleDelete = async (categoryId: string) => {
-        await deleteCategory(categoryId)
-        console.log('Delete category:', categoryId);
-    };
 
     const saveModify = async () => {
         console.log(categoryName, type, parentCategory)
@@ -72,6 +54,28 @@ const ModifyCatsPage = () => {
         }
     }
 
+    const handleEdit = (category: Category) => {
+        setInitialValue(
+            category._id,
+            category.name,
+            category.type,
+            category.parentCategory
+        );
+        openModal(
+            <EditCategoryForm
+                done={saveModify}
+                undo={closeModal}
+            />,
+            'Modifica categoria'
+        );
+        console.log('Edit category:', category);
+    };
+
+    const handleDelete = async (categoryId: string) => {
+        await deleteCategory(categoryId)
+        console.log('Delete category:', categoryId);
+    };
+
     if (isLoading) return <Loader />;
 
     if (categories.length === 0) {
@@ -85,13 +89,13 @@ const ModifyCatsPage = () => {
     return (
 
         <div className="px-4 pb-6">
-            <Modal
+            {/* <Modal
                 show={showModal}
                 title="Modifica categoria"
                 content={<Form />}
                 undo={closeModal}
                 done={saveModify}
-            />
+            /> */}
             <div className="max-w-2xl mx-auto">
                 <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
                     Modifica categorie

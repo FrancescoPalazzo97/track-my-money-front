@@ -1,16 +1,17 @@
 import { createPortal } from "react-dom";
-import DefaultButton from "../atoms/buttons/DefaultButton";
+import { store } from "../../store/store";
+import { useShallow } from "zustand/shallow";
 
-type Props = {
-    title: string,
-    content: React.ReactNode,
-    show: boolean,
-    undo: () => void,
-    done: () => void
-}
+const Modal = () => {
 
-const Modal = ({ title, content, show, undo, done }: Props) => {
-    return show && createPortal((
+    const { isModalOpen, title, content } = store(
+        useShallow(s => ({
+            isModalOpen: s.isModalOpen,
+            title: s.modalTitle,
+            content: s.modalContent
+        })))
+
+    return isModalOpen && createPortal((
         <div className="bg-black/70 backdrop-blur-md p-4 fixed inset-0 flex justify-center items-center z-50">
             <div className="w-full max-w-2xl bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/50 overflow-hidden">
                 {/* Header */}
@@ -26,7 +27,7 @@ const Modal = ({ title, content, show, undo, done }: Props) => {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800/50 bg-slate-950/50">
+                {/* <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800/50 bg-slate-950/50">
                     <DefaultButton
                         onClick={undo}
                         variant="secondary"
@@ -39,7 +40,7 @@ const Modal = ({ title, content, show, undo, done }: Props) => {
                     >
                         Conferma
                     </DefaultButton>
-                </div>
+                </div> */}
             </div>
         </div>
     ), document.body)

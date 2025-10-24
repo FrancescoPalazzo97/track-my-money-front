@@ -75,7 +75,9 @@ export const createCategoriesSlice: StateCreator<
         console.log('addCategory: chiamata iniziata', { data });
         set({ isLoadingCategory: true });
         try {
+            console.log('inizio')
             const res = await categoriesService.update(categoryId, data);
+            console.log('preso res')
             console.log('modifyCategory: risposta ricevuta', { res });
             set(s => ({
                 categories: s.categories.map(c => c._id === res._id ? res : c),

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/organisms/Header";
 import { useEffect } from "react";
 import { store } from "../store/store";
+import Modal from "../components/organisms/Modal";
 
 const DefaultLayout = () => {
 
@@ -19,6 +20,7 @@ const DefaultLayout = () => {
 
     return (
         <>
+            <Modal />
             <Header />
             <main className="min-h-screen pt-[96px]">
                 <Outlet />
