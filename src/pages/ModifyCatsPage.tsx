@@ -1,5 +1,4 @@
 import { store } from "../store/store";
-import { Pencil, Trash2, TrendingDown, TrendingUp } from "lucide-react";
 import { useShallow } from "zustand/shallow";
 import Loader from "../components/molecules/Loader";
 import EmptyListComponent from "../components/molecules/EmptyListComponent";
@@ -7,14 +6,13 @@ import { CategoryUpdateSchema } from "../schemas/api.schemas";
 import type { Category } from "../types/api.types";
 import Modal from "../components/organisms/Modal";
 import Form from "../components/organisms/Form";
-import DefaultButton from "../components/atoms/buttons/DefaultButton";
 import CategoriesCard from "../components/molecules/cards/CategoriesCard";
 
 const ModifyCatsPage = () => {
 
     const {
         categories, isLoading,
-        modifyCategory,
+        modifyCategory, deleteCategory,
         showModal, openModal, closeModal,
         categoryName, type, parentCategory,
         categoryToModify, setInitialValue
@@ -23,6 +21,7 @@ const ModifyCatsPage = () => {
             categories: s.categories,
             isLoading: s.isLoadingCategory,
             modifyCategory: s.modifyCategory,
+            deleteCategory: s.deleteCategory,
             showModal: s.showModal,
             openModal: s.openModal,
             closeModal: s.closeModal,
@@ -45,8 +44,8 @@ const ModifyCatsPage = () => {
         console.log('Edit category:', category);
     };
 
-    const handleDelete = (categoryId: string) => {
-        // TODO: Implementare logica di eliminazione
+    const handleDelete = async (categoryId: string) => {
+        await deleteCategory(categoryId)
         console.log('Delete category:', categoryId);
     };
 
