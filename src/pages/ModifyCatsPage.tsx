@@ -6,6 +6,8 @@ import { CategoryUpdateSchema } from "../schemas/api.schemas";
 import type { Category } from "../types/api.types";
 import CategoriesCard from "../components/molecules/cards/CategoriesCard";
 import EditCategoryForm from "../components/organisms/forms/EditCategoryForm";
+import DefaultButton from "../components/atoms/buttons/DefaultButton";
+import CreateCategoryForm from "../components/organisms/forms/CreateCategoryForm";
 
 const ModifyCatsPage = () => {
 
@@ -31,29 +33,6 @@ const ModifyCatsPage = () => {
         }))
     );
 
-    const saveModify = async () => {
-        console.log(categoryName, type, parentCategory)
-        let newData = {};
-        if (categoryName) {
-            newData = { ...newData, name: categoryName }
-        }
-        if (type) {
-            newData = { ...newData, type }
-        }
-        if (parentCategory) {
-            newData = { ...newData, parentCategory }
-        }
-        const validateData = CategoryUpdateSchema.safeParse(newData);
-
-        if (validateData.success) {
-            console.log(validateData.data)
-            await modifyCategory(categoryToModify, validateData.data)
-            closeModal();
-        } else {
-            console.error(validateData.error)
-        }
-    }
-
     const handleEdit = (category: Category) => {
         setInitialValue(
             category._id,
@@ -62,10 +41,7 @@ const ModifyCatsPage = () => {
             category.parentCategory
         );
         openModal(
-            <EditCategoryForm
-                done={saveModify}
-                undo={closeModal}
-            />,
+            <EditCategoryForm />,
             'Modifica categoria'
         );
         console.log('Edit category:', category);
@@ -75,6 +51,13 @@ const ModifyCatsPage = () => {
         await deleteCategory(categoryId)
         console.log('Delete category:', categoryId);
     };
+
+    const handleCreate = async () => {
+        openModal(
+            <CreateCategoryForm />,
+            'Crea una nuova gategoria'
+        )
+    }
 
     if (isLoading) return <Loader />;
 
@@ -89,17 +72,19 @@ const ModifyCatsPage = () => {
     return (
 
         <div className="px-4 pb-6">
-            {/* <Modal
-                show={showModal}
-                title="Modifica categoria"
-                content={<Form />}
-                undo={closeModal}
-                done={saveModify}
-            /> */}
             <div className="max-w-2xl mx-auto">
                 <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
                     Modifica categorie
                 </h2>
+                <div className="py-4">
+                    <DefaultButton
+                        onClick={handleCreate}
+                        fullWidth
+                        size="lg"
+                    >
+                        Aggiungi nuova categoria
+                    </DefaultButton>
+                </div>
                 <ul className='space-y-3'>
                     {categories.map(cat => (
                         <CategoriesCard

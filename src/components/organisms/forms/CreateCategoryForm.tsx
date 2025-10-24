@@ -1,14 +1,15 @@
-import { useShallow } from "zustand/shallow";
-import { store } from "../../../store/store";
-import { TrendingDown, TrendingUp } from "lucide-react";
-import DefaultButton from "../../atoms/buttons/DefaultButton";
-import { CategoryUpdateSchema } from "../../../schemas/api.schemas";
+import { store } from '../../../store/store';
+import { useShallow } from 'zustand/shallow';
+import type { CategoryInput } from '../../../types/api.types';
+import DefaultButton from '../../atoms/buttons/DefaultButton';
+import { TrendingDown, TrendingUp } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 
-const EditCategoryForm = () => {
+const CreateCategoryForm = () => {
 
     const {
         categories, categoryToModify,
-        modifyCategory,
+        addCategory,
         categoryName, setCategoryName,
         type, setType,
         parentCategory, setParentCategory,
@@ -24,13 +25,25 @@ const EditCategoryForm = () => {
             setParentCategory: s.setParentCategory,
             categoryToModify: s.categoryId,
             closeModal: s.closeModal,
-            modifyCategory: s.modifyCategory
+            modifyCategory: s.modifyCategory,
+            addCategory: s.addCategory
         }))
     );
 
-    const saveModify = async () => {
-        console.log(categoryName, type, parentCategory)
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setCategoryName(e)
+    }
+
+    const createCategory = async () => {
         let newData = {};
+        if (!categoryName.trim()) {
+            console.error('Il nome non può essere vuoto')
+            return
+        }
+        if (!type) {
+            console.error('Seleziona il tipo di transazione')
+            return
+        }
         if (categoryName) {
             newData = { ...newData, name: categoryName }
         }
@@ -40,15 +53,8 @@ const EditCategoryForm = () => {
         if (parentCategory) {
             newData = { ...newData, parentCategory }
         }
-        const validateData = CategoryUpdateSchema.safeParse(newData);
-
-        if (validateData.success) {
-            console.log(validateData.data)
-            await modifyCategory(categoryToModify, validateData.data)
-            closeModal();
-        } else {
-            console.error(validateData.error)
-        }
+        await addCategory(newData as CategoryInput)
+        closeModal()
     }
 
     return (
@@ -59,10 +65,9 @@ const EditCategoryForm = () => {
                     Nome categoria
                 </label>
                 <input
-                    id="category-name"
                     type="text"
                     value={categoryName}
-                    onChange={setCategoryName}
+                    onChange={handleChange}
                     placeholder="Es. Spesa alimentare"
                     className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700/50 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200"
                 />
@@ -127,7 +132,7 @@ const EditCategoryForm = () => {
                     Annulla
                 </DefaultButton>
                 <DefaultButton
-                    onClick={saveModify}
+                    onClick={createCategory}
                     variant="emerald"
                 >
                     Conferma
@@ -137,4 +142,4 @@ const EditCategoryForm = () => {
     )
 }
 
-export default EditCategoryForm
+export default CreateCategoryForm

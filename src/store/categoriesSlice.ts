@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { Category, CategoryUpdate } from "../types/api.types";
+import type { Category, CategoryInput, CategoryUpdate } from "../types/api.types";
 import { categoriesService } from "../services";
 import type { TStore } from "../types/store";
 
@@ -12,7 +12,7 @@ type TCategoriesState = {
 type TCategoriesActions = {
     fetchCategories: (group?: boolean) => Promise<void>,
     fetchCategoryById: (categoryId: string) => Promise<void>,
-    addCategory: (data: Category) => Promise<void>,
+    addCategory: (data: CategoryInput) => Promise<void>,
     modifyCategory: (categoryId: string, data: CategoryUpdate) => Promise<void>,
     deleteCategory: (categoryId: string) => Promise<void>,
 }

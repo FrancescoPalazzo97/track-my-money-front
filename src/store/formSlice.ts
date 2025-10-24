@@ -4,8 +4,8 @@ import type { ChangeEventHandler } from "react";
 
 type TFormState = {
     categoryId: string,
-    categoryName: string | undefined,
-    type: string | undefined,
+    categoryName: string,
+    type: string,
     parentCategory: string | undefined
 }
 
@@ -20,8 +20,8 @@ export type TFormSlice = TFormState & TFormActions;
 
 const initialState: TFormState = {
     categoryId: '',
-    categoryName: undefined,
-    type: undefined,
+    categoryName: '',
+    type: '',
     parentCategory: undefined
 }
 

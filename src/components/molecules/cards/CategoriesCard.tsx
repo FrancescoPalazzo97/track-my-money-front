@@ -27,13 +27,9 @@ const CategoriesCard = ({ category, handleEdit, handleDelete }: Props) => {
                         )}
                     </div>
                     <div className='flex-1 min-w-0'>
-                        <input
-                            type="text"
-                            id={`categoryName-${category._id}`}
-                            className='text-slate-100 font-medium text-lg truncate'
-                            placeholder={category.name}
-                            defaultValue={category.name}
-                        />
+                        <span className='text-slate-100 font-medium text-lg truncate'>
+                            {category.name}
+                        </span>
                     </div>
                 </div>
                 <div className='flex items-center gap-2 flex-shrink-0'>
