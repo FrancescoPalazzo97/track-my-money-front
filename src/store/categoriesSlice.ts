@@ -2,6 +2,7 @@ import type { StateCreator } from "zustand";
 import type { TCategory, TCategoryInput, TCategoryUpdate } from "../types/api.types";
 import { categoriesService } from "../services/categoriesService";
 import type { TStore } from "../types/store";
+import { tryCatch } from "../lib/tryCatch";
 
 type TCategoriesState = {
     categories: TCategory[],
@@ -35,9 +36,13 @@ export const createCategorySlice: StateCreator<
     fetchCategories: async () => {
         console.log('fetchCategories: chiamata iniziata');
         set({ isLoadingCategory: true });
-        const res = await categoriesService.getAll();
-        console.log('fetchCategories: risposta ricevuta', { res, length: res.length });
-        set({ categories: res, isLoadingCategory: false });
+        const [res, error] = await tryCatch(categoriesService.getAll());
+        if (error) {
+            console.error('Errore durante il recupero dei dati!\n', error)
+        } else {
+            console.log('fetchCategories: risposta ricevuta', { res, length: res.length });
+            set({ categories: res, isLoadingCategory: false });
+        }
     },
     fetchCategoryById: async () => { },
     addCategory: async () => { },
