@@ -1,20 +1,34 @@
 import BaseButton from '../components/ui/BaseButton';
 import CategoriesList from '../components/lists/CategoriesList';
+import { useShallow } from 'zustand/shallow';
+import { store } from '../store/store';
+import CategoryForm from '../components/forms/CategoryForm';
 
 const ModifyCategoriesPage = () => {
+
+    const { setCategoryInitialValue, openModal, closeModal } = store(
+        useShallow(s => ({
+            setCategoryInitialValue: s.setCategoryInitialValue,
+            openModal: s.openModal,
+            closeModal: s.closeModal
+        }))
+    );
 
     const handleEdit = () => { };
 
     const handleDelete = () => { };
 
-    const handleCreate = () => { };
+    const handleCreate = () => {
+        setCategoryInitialValue('', '', undefined);
+        openModal(
+            <CategoryForm />,
+            'Crea nuova categoria'
+        );
+    };
 
     return (
         <div className="px-4 pb-6">
             <div className="max-w-2xl mx-auto">
-                <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
-                    Modifica categorie
-                </h2>
                 <div className="py-4">
                     <BaseButton
                         onClick={handleCreate}

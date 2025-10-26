@@ -2,12 +2,21 @@ import { Pencil, Trash2 } from "lucide-react"
 import type { TCategory } from "../../types/api.types"
 import BaseButton from "../ui/BaseButton"
 import TypeCategoryLabel from "../labels/TypeCategoryLabel"
+import { store } from "../../store/store"
+import { useShallow } from "zustand/shallow"
 
 type Props = {
     category: TCategory
 }
 
 const CategoriesCard = ({ category }: Props) => {
+
+    const { openModal, closeModal } = store(
+        useShallow(s => ({
+            openModal: s.openModal,
+            closeModal: s.closeModal
+        })))
+
     return (
         <div className='flex items-center justify-between gap-4'>
             <div className='flex items-center gap-3 flex-1 min-w-0'>
@@ -20,7 +29,7 @@ const CategoriesCard = ({ category }: Props) => {
             </div>
             <div className='flex items-center gap-2 flex-shrink-0'>
                 <BaseButton
-                    onClick={() => { }}
+                    onClick={() => { openModal() }}
                     variant="secondary"
                     hoverColor="yellow"
                     aria-label='Modifica categoria'
