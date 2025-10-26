@@ -1,14 +1,16 @@
 import { createPortal } from "react-dom";
 import { store } from "../store/store";
 import { useShallow } from "zustand/shallow";
+import ErrorContent from "./errors/ErrorContent";
 
 const Modal = () => {
 
-    const { isModalOpen, title, content } = store(
+    const { isModalOpen, title, content, error } = store(
         useShallow(s => ({
             isModalOpen: s.isModalOpen,
             title: s.modalTitle,
-            content: s.modalContent
+            content: s.modalContent,
+            error: s.error
         })))
 
     return isModalOpen && createPortal((
@@ -23,7 +25,11 @@ const Modal = () => {
 
                 {/* Content */}
                 <div className="px-6 py-6">
-                    {content}
+                    {error ? (
+                        <ErrorContent error={error} />
+                    ) : (
+                        content
+                    )}
                 </div>
 
                 {/* Footer */}

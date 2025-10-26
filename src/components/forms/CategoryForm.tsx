@@ -2,8 +2,7 @@ import { useShallow } from "zustand/shallow";
 import { store } from "../../store/store"
 import BaseButton from "../ui/BaseButton";
 import { TrendingDown, TrendingUp } from "lucide-react";
-import type { tryCatch } from "../../lib/tryCatch";
-
+import ErrorContent from "../errors/ErrorContent";
 const CategoryForm = () => {
 
     const {
@@ -11,7 +10,8 @@ const CategoryForm = () => {
         type, setType,
         parentCategory, setParentCategory,
         categories, addCategory,
-        closeModal
+        openModal, closeModal,
+        error
     } = store(
         useShallow(s => ({
             name: s.name,
@@ -23,7 +23,9 @@ const CategoryForm = () => {
             nameError: s.nameError,
             categories: s.categories,
             addCategory: s.addCategory,
-            closeModal: s.closeModal
+            openModal: s.openModal,
+            closeModal: s.closeModal,
+            error: s.error
         }))
     );
 
@@ -32,7 +34,7 @@ const CategoryForm = () => {
         if (name.trim() === '' || type === '') return;
         console.log('Submitting form with values:', { name, type, parentCategory });
         await addCategory({ name, type, parentCategory });
-        closeModal();
+        if (error) console.log('errore presente dopo addCategory:', error);
     };
 
     return (
