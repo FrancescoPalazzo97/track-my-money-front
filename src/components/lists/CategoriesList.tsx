@@ -5,12 +5,13 @@ import { getGroupedCategories } from '../../lib/getGroupedCategories';
 import { Loader } from 'lucide-react';
 import EmptyList from './EmptyList';
 import GroupedCategoryCard from '../cards/GroupedCategoriesCard';
+import CategoriesCard from '../cards/CategoriesCard';
 
 type Props = {
     mode: 'view' | 'edit'
 }
 
-const GroupedCategoriesList = ({ mode }: Props) => {
+const CategoriesList = ({ mode }: Props) => {
 
     const { categories, isLoading } = store(
         useShallow(s => ({
@@ -45,7 +46,7 @@ const GroupedCategoriesList = ({ mode }: Props) => {
                 <>
                     {groupedCategories.map(c => (
                         <li
-                            className='bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'
+                            className='bg-slate-900/50 p-4 backdrop-blur-sm border border-slate-800/50 rounded-xl hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'
                             key={c._id}>
                             <GroupedCategoryCard
                                 category={c}
@@ -58,9 +59,12 @@ const GroupedCategoriesList = ({ mode }: Props) => {
                 <>
                     {categories.map(c => (
                         <li
-                            className='bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'
-                            key={c._id}>
-
+                            className='bg-slate-900/50 p-4 backdrop-blur-sm border border-slate-800/50 rounded-xl hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'
+                            key={c._id}
+                        >
+                            <CategoriesCard
+                                category={c}
+                            />
                         </li>
                     ))}
                 </>
@@ -69,4 +73,4 @@ const GroupedCategoriesList = ({ mode }: Props) => {
     )
 }
 
-export default GroupedCategoriesList
+export default CategoriesList

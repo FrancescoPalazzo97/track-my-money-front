@@ -5,6 +5,7 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import TransactionsPage from "./pages/TransactionsPage";
 import SettingsPage from "./pages/SettingsPage";
 import CategoriesPage from "./pages/CategoriesPage";
+import ModifyCategoriesPage from "./pages/ModifyCategoriesPage";
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/modify-categories" />
+          <Route path="/modify-categories" element={<ModifyCategoriesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

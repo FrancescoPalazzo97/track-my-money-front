@@ -13,7 +13,6 @@ const GroupedCategoryCard = ({ category }: Props) => {
 
     return (
         <details
-            className='p-4'
             onToggle={e => setIsOpen(e.currentTarget.open)}
         >
             <summary className="cursor-pointer list-none flex justify-between items-center gap-4">
