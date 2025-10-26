@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import type { TCategory } from '../../types/api.types'
+import { Triangle } from 'lucide-react'
+import TypeCategoryLabel from '../labels/TypeCategoryLabel'
 
 type Props = {
     category: TCategory
@@ -10,22 +12,33 @@ const GroupedCategoryCard = ({ category }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className='bg-slate-800/50 hover:bg-slate-800/70 transition-colors rounded-md p-3'>
-            <span className='font-medium'>{category.name}</span>
-            <div className={`mt-2 overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-40' : 'max-h-0'}`}>
-                <div className='text-sm text-slate-400'>
+        <details
+            className='p-4'
+            onToggle={e => setIsOpen(e.currentTarget.open)}
+        >
+            <summary className="cursor-pointer list-none flex justify-between items-center gap-4">
+                <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                    <Triangle />
+                </span>
+                <span className='text-slate-300 font-medium text-lg truncate'>
+                    {category.name}
+                </span>
+                <TypeCategoryLabel type={category.type} />
+            </summary>
+            {category.subCategories && category.subCategories.length > 0 ? (
+                <ul className="mt-4 space-y-2">
                     {category.subCategories?.map(sc => (
-                        <GroupedCategoryCard key={sc._id} category={sc} />
+                        <li
+                            key={sc._id}
+                        >
+                            <GroupedCategoryCard category={sc} />
+                        </li>
                     ))}
-                </div>
-            </div>
-            <button
-                className='mt-2 text-xs text-slate-500 hover:text-slate-300 transition-colors'
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                {isOpen ? 'Chiudi' : 'Leggi di più'}
-            </button>
-        </div>
+                </ul>
+            ) : (
+                <p className='mt-4'>Nessuna sottocategoria disponibile.</p>
+            )}
+        </details>
     )
 }
 

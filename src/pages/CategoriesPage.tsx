@@ -1,5 +1,5 @@
 import BaseLink from "../components/ui/BaseLink";
-import GroupedCategoriesList from "../components/lists/GroupedCategoriesList";
+import CategoriesList from "../components/lists/CategoriesList";
 
 const CategoriesPage = () => {
 
@@ -11,7 +11,7 @@ const CategoriesPage = () => {
                 <BaseLink to="/modify-categories" variant="emerald" size="lg" fullWidth>
                     Modifica categorie
                 </BaseLink>
-                <GroupedCategoriesList />
+                <CategoriesList mode="view" />
             </div>
         </div>
     )
