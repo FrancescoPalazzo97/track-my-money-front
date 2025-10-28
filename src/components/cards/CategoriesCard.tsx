@@ -4,18 +4,31 @@ import BaseButton from "../ui/BaseButton"
 import TypeCategoryLabel from "../labels/TypeCategoryLabel"
 import { store } from "../../store/store"
 import { useShallow } from "zustand/shallow"
-
+import EditCategoryForm from "../forms/EditCategoryForm"
 type Props = {
     category: TCategory
 }
 
 const CategoriesCard = ({ category }: Props) => {
 
-    const { openModal, closeModal } = store(
+    const { openModal, addIdToDelete, categoriesToDelete } = store(
         useShallow(s => ({
             openModal: s.openModal,
-            closeModal: s.closeModal
-        })))
+            addIdToDelete: s.addIdToDelete,
+            categoriesToDelete: s.categoriesToDelete
+        }))
+    );
+
+    const handleEdit = () => {
+        openModal(
+            <EditCategoryForm categoryId={category._id} />,
+            'Modifica categoria'
+        );
+    };
+
+    const handleDelete = () => {
+        addIdToDelete(category._id);
+    };
 
     return (
         <div className='flex items-center justify-between gap-4'>
@@ -29,7 +42,7 @@ const CategoriesCard = ({ category }: Props) => {
             </div>
             <div className='flex items-center gap-2 flex-shrink-0'>
                 <BaseButton
-                    onClick={() => { openModal() }}
+                    onClick={handleEdit}
                     variant="secondary"
                     hoverColor="yellow"
                     aria-label='Modifica categoria'
@@ -37,8 +50,8 @@ const CategoriesCard = ({ category }: Props) => {
                     <Pencil className='w-4 h-4' />
                 </BaseButton>
                 <BaseButton
-                    onClick={() => { }}
-                    variant="secondary"
+                    onClick={handleDelete}
+                    variant={categoriesToDelete.includes(category._id) ? "red" : "secondary"}
                     hoverColor="red"
                     aria-label='Elimina categoria'
                 >

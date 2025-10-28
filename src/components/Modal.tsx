@@ -5,17 +5,24 @@ import ErrorContent from "./errors/ErrorContent";
 
 const Modal = () => {
 
-    const { isModalOpen, title, content, error } = store(
+    const { isModalOpen, title, content, error, closeModal } = store(
         useShallow(s => ({
             isModalOpen: s.isModalOpen,
             title: s.modalTitle,
             content: s.modalContent,
-            error: s.error
+            error: s.categoryError,
+            closeModal: s.closeModal
         })))
 
     return isModalOpen && createPortal((
-        <div className="bg-black/70 backdrop-blur-md p-4 fixed inset-0 flex justify-center items-center z-50">
-            <div className="w-full max-w-2xl bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/50 overflow-hidden">
+        <div
+            className="bg-black/70 backdrop-blur-md p-4 fixed inset-0 flex justify-center items-center z-50"
+            onClick={closeModal}
+        >
+            <div
+                className="w-full max-w-2xl bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/50 overflow-hidden"
+                onClick={e => e.stopPropagation()}
+            >
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/50">
                     <h2 className="text-xl font-semibold text-slate-100">
@@ -48,7 +55,7 @@ const Modal = () => {
                     </DefaultButton>
                 </div> */}
             </div>
-        </div>
+        </div >
     ), document.body)
 }
 

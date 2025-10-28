@@ -1,16 +1,22 @@
-import { useShallow } from "zustand/shallow";
-import { store } from "../../store/store"
-import BaseButton from "../ui/BaseButton";
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { CategoryInputSchema } from "../../schemas/api.schemas";
+import React, { useEffect } from 'react'
+import { store } from '../../store/store';
+import { useShallow } from 'zustand/shallow';
+import BaseButton from '../ui/BaseButton';
+import { TrendingDown, TrendingUp } from 'lucide-react';
+import { CategoryUpdateSchema } from '../../schemas/api.schemas';
+import { ca } from 'zod/locales';
 
-const CategoryForm = () => {
+type Props = {
+    categoryId: string;
+}
+
+const EditCategoryForm = ({ categoryId }: Props) => {
 
     const {
         name, setName, nameError,
         type, setType,
         parentCategory, setParentCategory,
-        categories, addCategory,
+        categories, modifyCategory,
         closeModal, setError
     } = store(
         useShallow(s => ({
@@ -22,28 +28,37 @@ const CategoryForm = () => {
             setParentCategory: s.setParentCategory,
             nameError: s.nameError,
             categories: s.categories,
-            addCategory: s.addCategory,
+            modifyCategory: s.modifyCategory,
             closeModal: s.closeModal,
             setError: s.setError
         }))
     );
 
+    useEffect(() => {
+        const category = categories.find(c => c._id === categoryId);
+        if (category) {
+            setName({ target: { value: category.name } } as React.ChangeEvent<HTMLInputElement>);
+            setType(category.type);
+            setParentCategory({ target: { value: category.parentCategory || '' } } as React.ChangeEvent<HTMLSelectElement>);
+        }
+    }, [categoryId]);
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const validateData = CategoryInputSchema.safeParse({ name, type, parentCategory });
+        // Implementa la logica di modifica della categoria qui
+        const validateData = CategoryUpdateSchema.safeParse({ name, type, parentCategory });
         if (!validateData.success) {
             setError(validateData.error.message);
             return;
         }
-        const exist = categories.some(c => c.name.toLowerCase() === name.trim().toLowerCase());
-        if (exist) {
-            setError('Esiste già una categoria con questo nome!');
+        if (validateData.data.parentCategory === categoryId) {
+            setError('Una categoria non può essere la propria categoria padre!');
             return;
         }
-        console.log('Submitting form with values:', validateData.data);
-        const { success } = await addCategory(validateData.data);
+        console.log('Modifying category with values:', { name, type, parentCategory });
+        const { success } = await modifyCategory(categoryId, validateData.data);
         if (success) closeModal();
-    };
+    }
 
     return (
         <div>
@@ -70,7 +85,7 @@ const CategoryForm = () => {
                         <BaseButton
                             onClick={() => setType('expense')}
                             variant={type === 'expense' ? 'red' : 'secondary'}
-                            className="w-1/2 flex items-center justify-center border-2 gap-2"
+                            className="flex-1 flex items-center justify-center border-2 gap-2"
                         >
                             <TrendingDown className="w-5 h-5" />
                             <span>Uscita</span>
@@ -78,7 +93,7 @@ const CategoryForm = () => {
                         <BaseButton
                             onClick={() => setType('income')}
                             variant={type === 'income' ? 'emerald' : 'secondary'}
-                            className="w-1/2 flex items-center justify-center border-2 gap-2"
+                            className="flex-1 flex items-center justify-center border-2 gap-2"
                         >
                             <TrendingUp className="w-5 h-5" />
                             <span>Entrata</span>
@@ -98,7 +113,7 @@ const CategoryForm = () => {
                         >
                             <option value="">Nessuna</option>
                             {categories
-                                .filter(c => c.type === type)
+                                .filter(c => c.type === type && c._id !== categoryId)
                                 .map(c => (
                                     <option
                                         key={c._id}
@@ -129,4 +144,4 @@ const CategoryForm = () => {
     )
 }
 
-export default CategoryForm
+export default EditCategoryForm
