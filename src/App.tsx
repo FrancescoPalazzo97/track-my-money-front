@@ -6,13 +6,20 @@ import TransactionsPage from "./pages/TransactionsPage";
 import SettingsPage from "./pages/SettingsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import ModifyCategoriesPage from "./pages/ModifyCategoriesPage";
+import { useShallow } from "zustand/shallow";
 
 function App() {
 
-  const fetchCategories = store(s => (s.fetchCategories));
+  const { fetchCategories, fetchTransactions } = store(
+    useShallow(s => ({
+      fetchTransactions: s.fetchTransactions,
+      fetchCategories: s.fetchCategories
+    }))
+  );
 
   useEffect(() => {
     fetchCategories();
+    fetchTransactions();
   }, []);
 
   return (

@@ -71,7 +71,6 @@ export const createCategorySlice: StateCreator<
         if (data.parentCategory === '') {
             delete data.parentCategory
         }
-        // Eliminare i dati uguali
         console.log('addCategory: chiamata iniziata', { categoryId, data });
         set({ isLoadingCategory: true });
         const [res, error] = await tryCatch(categoriesService.update(categoryId, data));

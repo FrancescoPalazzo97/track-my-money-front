@@ -1,9 +1,15 @@
-import React from 'react'
+import TransactionsList from '../components/lists/TransactionsList'
 
 const TransactionsPage = () => {
-    return (
-        <div>
 
+    return (
+        <div className="px-4 pb-6">
+            <div className="max-w-2xl mx-auto">
+                <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
+                    Lista movimenti
+                </h2>
+                <TransactionsList />
+            </div>
         </div>
     )
 }
