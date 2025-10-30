@@ -72,18 +72,17 @@ export const createCategorySlice: StateCreator<
             delete data.parentCategory
         }
         console.log('addCategory: chiamata iniziata', { categoryId, data });
-        set({ isLoadingCategory: true });
+        //set({ isLoadingCategory: true });
         const [res, error] = await tryCatch(categoriesService.update(categoryId, data));
         if (error) {
             const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
             console.error('modifyCategory: errore durante la modifica: ', errorMessage);
-            set({ categoryError: errorMessage, isLoadingCategory: false });
+            set({ categoryError: errorMessage });
             return { success: false };
         }
         console.log('modifyCategory: risposta ricevuta', { res });
         set(s => ({
-            categories: s.categories.map(c => c._id === res._id ? res : c),
-            isLoadingCategory: false
+            categories: s.categories.map(c => c._id === res._id ? res : c)
         }));
         return { success: true };
     },

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useOptimistic, useTransition } from 'react'
 import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
 import BaseButton from '../ui/BaseButton';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import { CategoryUpdateSchema } from '../../schemas/api.schemas';
-import { ca } from 'zod/locales';
+import type { TCategory } from '../../types/api.types';
 
 type Props = {
     categoryId: string;
@@ -34,6 +34,12 @@ const EditCategoryForm = ({ categoryId }: Props) => {
         }))
     );
 
+    const [, startTransition] = useTransition();
+    const [optimisticCategories, addOptimisticCategory] = useOptimistic(
+        categories,
+        (state, newCategory: TCategory): TCategory[] => [...state, newCategory]
+    );
+
     useEffect(() => {
         const category = categories.find(c => c._id === categoryId);
         if (category) {
@@ -56,6 +62,9 @@ const EditCategoryForm = ({ categoryId }: Props) => {
             return;
         }
         console.log('Modifying category with values:', { name, type, parentCategory });
+        startTransition(() => {
+            addOptimisticCategory(validateData.data as TCategory);
+        });
         const { success } = await modifyCategory(categoryId, validateData.data);
         if (success) closeModal();
     }
