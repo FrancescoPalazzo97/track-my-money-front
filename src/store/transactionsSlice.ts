@@ -53,7 +53,13 @@ export const createTransactionSlice: StateCreator<
         console.log('fetchTransactions: risposta ricevuta: ', { res, length: res.length });
         set({ transactions: res, isLoadingTransaction: false });
     },
-    fetchTransactionById: async () => { },
+    fetchTransactionById: async (transactionId) => {
+        console.log('fetchTransactionById: chiamata iniziata', { transactionId });
+        set({ isLoadingTransaction: true });
+        const res = await transactionsService.getById(transactionId, 'EUR');
+        console.log('fetchTransactionById: risposta ricevuta', { res });
+        set({ transaction: res, isLoadingTransaction: false });
+    },
     addTransaction: async (data) => {
         return { success: true }
     },

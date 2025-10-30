@@ -21,6 +21,7 @@ type Props = {
     hoverColor?: ButtonHoverColor
     size?: ButtonSize
     disabled?: boolean
+    truncate?: boolean
     fullWidth?: boolean
     onClick?: () => void
     type?: 'button' | 'submit' | 'reset'
@@ -33,6 +34,7 @@ const DefaultButton = ({
     hoverColor,
     size = 'md',
     disabled = false,
+    truncate = false,
     fullWidth = false,
     onClick,
     type = 'button',
@@ -41,8 +43,10 @@ const DefaultButton = ({
 
     const baseStyles = 'font-medium rounded-lg transition-all cursor-pointer duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
 
+    const truncateStyles = truncate ? 'truncate' : ''
+
     const sizeStyles = {
-        sm: 'px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-sm',
+        sm: 'px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm',
         md: 'px-4 py-2.5 text-sm sm:px-5 sm:py-2.5 sm:text-base',
         lg: 'px-5 py-3 text-base sm:px-7 sm:py-3.5 sm:text-lg'
     }
@@ -166,7 +170,7 @@ const DefaultButton = ({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${hoverStyles} ${widthStyles} ${className}`}
+            className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${hoverStyles} ${widthStyles} ${className} ${truncateStyles}`}
         >
             {children}
         </button>

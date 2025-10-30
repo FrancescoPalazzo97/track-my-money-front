@@ -3,7 +3,6 @@ import CategoriesList from '../components/lists/CategoriesList';
 import { useShallow } from 'zustand/shallow';
 import { store } from '../store/store';
 import CategoryForm from '../components/forms/CategoryForm';
-import { de } from 'zod/locales';
 import { Trash } from 'lucide-react';
 
 const ModifyCategoriesPage = () => {
@@ -16,8 +15,6 @@ const ModifyCategoriesPage = () => {
             deleteCategory: s.deleteCategory
         }))
     );
-
-    const handleEdit = () => { };
 
     const handleDelete = async () => {
         if (categoriesToDelete.length === 0) return;
@@ -40,7 +37,7 @@ const ModifyCategoriesPage = () => {
     };
 
     const addButtonProps = categoriesToDelete.length > 0
-        ? { className: 'w-3/4' }
+        ? { className: 'w-2/4 sm:w-3/4' }
         : { fullWidth: true };
 
     return (
@@ -50,6 +47,7 @@ const ModifyCategoriesPage = () => {
                     <BaseButton
                         onClick={handleCreate}
                         {...addButtonProps}
+                        truncate
                         size="lg"
                     >
                         Aggiungi nuova categoria
@@ -57,7 +55,7 @@ const ModifyCategoriesPage = () => {
                     {categoriesToDelete.length > 0 && (
                         <BaseButton
                             onClick={handleDelete}
-                            className='w-1/4 flex items-center justify-center gap-2'
+                            className='w-2/4 md:w-1/4 flex items-center justify-center gap-2'
                             size="lg"
                             variant="red"
                         >

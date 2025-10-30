@@ -1,5 +1,8 @@
-import type { TTransaction } from '../../types/api.types'
+import { useShallow } from 'zustand/shallow';
+import type { TTransaction } from '../../types/api.types';
 import LabelPrice from '../labels/LabelPrice';
+import { store } from '../../store/store';
+import TransactionDetails from '../TransactionDetails';
 
 type Props = {
     transaction: TTransaction
@@ -7,27 +10,29 @@ type Props = {
 
 const TransactionsCard = ({ transaction }: Props) => {
 
+    const { openModal, fetchTransactionById } = store(
+        useShallow(s => ({
+            openModal: s.openModal,
+            fetchTransactionById: s.fetchTransactionById
+        }))
+    )
+
     const amount = transaction.amountInEUR || transaction.amount;
 
     const type = transaction.category?.type;
 
-    let styles;
-
-    switch (type) {
-        case 'income':
-            styles = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-            break;
-        case 'expense':
-            styles = 'bg-red-500/10 text-red-400 border border-red-500/20';
-            break;
-        default:
-            styles = 'bg-gray-500/10 text-gay-400 border border-gray-500/20';
-            break;
+    const handleClick = () => {
+        openModal(
+            <TransactionDetails transactionId={transaction._id} />,
+            'Dettagli Transazione'
+        )
     }
 
-
     return (
-        <li className='bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl p-4 hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'>
+        <li
+            onClick={handleClick}
+            className='bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl p-4 hover:border-slate-700/50 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/5'
+        >
             <div className='flex items-start justify-between gap-4'>
                 <div className='flex-1 min-w-0'>
                     <h3 className='text-slate-100 font-medium text-lg mb-1 truncate'>
