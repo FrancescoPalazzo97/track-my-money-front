@@ -44,9 +44,6 @@ const TransactionDetails = ({ transactionId }: Props) => {
 
     const amount = transaction.amountInEUR || transaction.amount;
     const type = transaction.category.type;
-    console.log('transaction: ', transaction);
-    console.log('Transaction category: ', transaction.category)
-    console.log('TIPO: ', type)
 
     // Trova la categoria completa nell'array categories
     const findCategoryById = categories.find(c => c._id === transaction.category._id);
@@ -101,7 +98,7 @@ const TransactionDetails = ({ transactionId }: Props) => {
                                 <div className='mt-2 flex items-center gap-2 text-sm'>
                                     <ArrowRightLeft className='w-4 h-4 text-slate-500' />
                                     <span className='text-slate-400'>
-                                        Convertito: {transaction.amountInEUR.toFixed(2)} EUR
+                                        Convertito: {transaction.amountInEUR} EUR
                                     </span>
                                 </div>
                             )}

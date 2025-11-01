@@ -1,13 +1,27 @@
 import TransactionsList from '../components/lists/TransactionsList'
+import TotalComponent from '../components/TotalComponent';
+import BaseButton from '../components/ui/BaseButton';
 
 const TransactionsPage = () => {
+
+    const handleCreate = () => {
+
+    }
 
     return (
         <div className="px-4 pb-6">
             <div className="max-w-2xl mx-auto">
-                <h2 className='text-2xl font-semibold text-slate-100 mb-6 pt-2'>
-                    Lista movimenti
-                </h2>
+                <div className="py-4 gap-4 flex flex-col">
+                    <TotalComponent />
+                    <BaseButton
+                        onClick={() => { }}
+                        fullWidth
+                        truncate
+                        size="lg"
+                    >
+                        Aggiungi nuova transazione
+                    </BaseButton>
+                </div>
                 <TransactionsList />
             </div>
         </div>
