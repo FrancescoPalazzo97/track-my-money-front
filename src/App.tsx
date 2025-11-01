@@ -7,19 +7,33 @@ import SettingsPage from "./pages/SettingsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import ModifyCategoriesPage from "./pages/ModifyCategoriesPage";
 import { useShallow } from "zustand/shallow";
+import { useTryCatch } from "./hooks/useTryCatch";
+import type { tryCatch } from "./lib/tryCatch";
 
 function App() {
 
-  const { fetchCategories, fetchTransactions } = store(
+  const {
+    fetchCategories, fetchTransactions,
+    error, setError
+  } = store(
     useShallow(s => ({
       fetchTransactions: s.fetchTransactions,
-      fetchCategories: s.fetchCategories
+      fetchCategories: s.fetchCategories,
+      error: s.errorMessage,
+      setError: s.setError
     }))
   );
 
   useEffect(() => {
-    fetchCategories();
-    fetchTransactions();
+    try {
+      fetchCategories();
+      fetchTransactions();
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      }
+      setError();
+    }
   }, []);
 
   return (

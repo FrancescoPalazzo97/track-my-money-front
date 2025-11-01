@@ -5,12 +5,14 @@ import { immer } from 'zustand/middleware/immer';
 import { createModalSlice } from './modalSlice';
 import { createFormSlice } from './formSlice';
 import { createTransactionSlice } from './TransactionsSlice';
+import { createErrorsSlice } from './errorsSlice';
 
 export const store = create<TStore>()(
     immer((...a) => ({
         ...createCategorySlice(...a),
         ...createModalSlice(...a),
         ...createFormSlice(...a),
-        ...createTransactionSlice(...a)
+        ...createTransactionSlice(...a),
+        ...createErrorsSlice(...a)
     }))
 )

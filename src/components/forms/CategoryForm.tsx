@@ -2,15 +2,21 @@ import { useShallow } from "zustand/shallow";
 import { store } from "../../store/store"
 import BaseButton from "../ui/BaseButton";
 import { TrendingDown, TrendingUp } from "lucide-react";
-import { CategoryInputSchema } from "../../schemas/api.schemas";
+import { CategoryInputSchema, CategoryUpdateSchema } from "../../schemas/api.schemas";
+import { useTryCatch } from "../../hooks/useTryCatch";
+import { useEffect } from "react";
 
-const CategoryForm = () => {
+type Props = {
+    categoryId?: string;
+}
+
+const CategoryForm = ({ categoryId }: Props) => {
 
     const {
         name, setName, nameError,
         type, setType,
         parentCategory, setParentCategory,
-        categories, addCategory,
+        categories, addCategory, modifyCategory,
         closeModal, setError
     } = store(
         useShallow(s => ({
@@ -23,12 +29,22 @@ const CategoryForm = () => {
             nameError: s.nameError,
             categories: s.categories,
             addCategory: s.addCategory,
+            modifyCategory: s.modifyCategory,
             closeModal: s.closeModal,
             setError: s.setError
         }))
     );
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        const category = categories.find(c => c._id === categoryId);
+        if (category) {
+            setName({ target: { value: category.name } } as React.ChangeEvent<HTMLInputElement>);
+            setType(category.type);
+            setParentCategory({ target: { value: category.parentCategory || '' } } as React.ChangeEvent<HTMLSelectElement>);
+        }
+    }, [categoryId]);
+
+    const handleSubmitCreate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const validateData = CategoryInputSchema.safeParse({ name, type, parentCategory });
         if (!validateData.success) {
@@ -41,13 +57,40 @@ const CategoryForm = () => {
             return;
         }
         console.log('Submitting form with values:', validateData.data);
-        const { success } = await addCategory(validateData.data);
-        if (success) closeModal();
+        const [, error] = await useTryCatch(addCategory(validateData.data));
+        if (error) {
+            setError(error.message);
+            return;
+        }
+        closeModal();
     };
+
+    const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        // Implementa la logica di modifica della categoria qui
+        const validateData = CategoryUpdateSchema.safeParse({ name, type, parentCategory });
+        if (!validateData.success) {
+            setError(validateData.error.message);
+            return;
+        }
+        if (validateData.data.parentCategory === categoryId) {
+            setError('Una categoria non può essere la propria categoria padre!');
+            return;
+        }
+        if (categoryId) {
+            console.log('Modifying category with values:', { name, type, parentCategory });
+            const [, error] = await useTryCatch(modifyCategory(categoryId, validateData.data));
+            if (error) {
+                setError(error.message);
+                return;
+            }
+            closeModal();
+        }
+    }
 
     return (
         <div>
-            <form className="space-y-10" onSubmit={handleSubmit}>
+            <form className="space-y-10" onSubmit={categoryId ? handleSubmitEdit : handleSubmitCreate}>
                 <div>
                     <label className="block text-sm font-medium">
                         <h3 className="mb-1.5">Nome</h3>
