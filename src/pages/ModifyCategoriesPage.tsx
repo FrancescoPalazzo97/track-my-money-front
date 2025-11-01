@@ -42,14 +42,6 @@ const ModifyCategoriesPage = () => {
         } else {
             console.log('Tutte le categorie eliminate con successo');
         }
-
-        // try {
-        //     await Promise.allSettled(
-        //         categoriesToDelete.map(id => deleteCategory(id))
-        //     );
-        // } catch (error) {
-        //     console.error('Errore durante l\'eliminazione delle categorie:', error);
-        // }
     };
 
     const handleCreate = () => {

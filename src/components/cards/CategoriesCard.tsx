@@ -1,10 +1,11 @@
-import { Pencil, Trash2 } from "lucide-react"
-import type { TCategory } from "../../types/api.types"
-import BaseButton from "../ui/BaseButton"
-import TypeCategoryLabel from "../labels/TypeCategoryLabel"
-import { store } from "../../store/store"
-import { useShallow } from "zustand/shallow"
-import EditCategoryForm from "../forms/EditCategoryForm"
+import { Pencil, Trash2 } from "lucide-react";
+import type { TCategory } from "../../types/api.types";
+import BaseButton from "../ui/BaseButton";
+import TypeCategoryLabel from "../labels/TypeCategoryLabel";
+import { store } from "../../store/store";
+import { useShallow } from "zustand/shallow";
+import CategoryForm from "../forms/CategoryForm";
+
 type Props = {
     category: TCategory
 }
@@ -21,7 +22,7 @@ const CategoriesCard = ({ category }: Props) => {
 
     const handleEdit = () => {
         openModal(
-            <EditCategoryForm categoryId={category._id} />,
+            <CategoryForm categoryId={category._id} />,
             'Modifica categoria'
         );
     };
