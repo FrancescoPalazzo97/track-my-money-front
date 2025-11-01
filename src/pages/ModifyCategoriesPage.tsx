@@ -7,25 +7,49 @@ import { Trash } from 'lucide-react';
 
 const ModifyCategoriesPage = () => {
 
-    const { setCategoryInitialValue, openModal, deleteCategory, categoriesToDelete } = store(
+    const { setCategoryInitialValue, openModal, deleteCategory, categoriesToDelete, setError, categories } = store(
         useShallow(s => ({
             setCategoryInitialValue: s.setCategoryInitialValue,
             openModal: s.openModal,
             categoriesToDelete: s.categoriesToDelete,
-            deleteCategory: s.deleteCategory
+            deleteCategory: s.deleteCategory,
+            setError: s.setError,
+            categories: s.categories
         }))
     );
 
     const handleDelete = async () => {
         if (categoriesToDelete.length === 0) return;
 
-        try {
-            await Promise.allSettled(
-                categoriesToDelete.map(id => deleteCategory(id))
-            );
-        } catch (error) {
-            console.error('Errore durante l\'eliminazione delle categorie:', error);
+        const results = await Promise.allSettled(
+            categoriesToDelete.map(id => deleteCategory(id))
+        )
+
+        const errors = results
+            .map((result, index) => ({ result, categoryId: categoriesToDelete[index] }))
+            .filter(({ result }) => result.status === 'rejected');
+
+        if (errors.length > 0) {
+            console.error('Errori durante l\'eliminazione:', errors);
+
+            const failedCategoryNames = errors.map(({ categoryId }) => {
+                const category = categories.find(c => c._id === categoryId);
+                return category ? category.name : categoryId;
+            });
+
+            const errorString = failedCategoryNames.join(', ');
+            setError(`Impossibile eliminare le seguenti categorie: ${errorString}`);
+        } else {
+            console.log('Tutte le categorie eliminate con successo');
         }
+
+        // try {
+        //     await Promise.allSettled(
+        //         categoriesToDelete.map(id => deleteCategory(id))
+        //     );
+        // } catch (error) {
+        //     console.error('Errore durante l\'eliminazione delle categorie:', error);
+        // }
     };
 
     const handleCreate = () => {

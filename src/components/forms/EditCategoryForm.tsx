@@ -4,7 +4,6 @@ import { useShallow } from 'zustand/shallow';
 import BaseButton from '../ui/BaseButton';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 import { CategoryUpdateSchema } from '../../schemas/api.schemas';
-import { ca } from 'zod/locales';
 
 type Props = {
     categoryId: string;

@@ -18,8 +18,8 @@ type TCategoriesActions = {
     addCategory: (data: TCategoryInput) => Promise<{ success: boolean }>,
     modifyCategory: (categoryId: string, data: TCategoryUpdate) => Promise<{ success: boolean }>,
     deleteCategory: (categoryId: string) => Promise<void>,
-    setError: (message: string) => void,
-    clearError: () => void,
+    //setError: (message: string) => void,
+    //clearError: () => void,
     addIdToDelete: (categoryId: string) => void
 }
 
@@ -50,19 +50,11 @@ export const createCategorySlice: StateCreator<
     fetchCategoryById: async () => { },
     addCategory: async (data): Promise<{ success: boolean }> => {
         console.log('addCategory: chiamata iniziata', { data });
-        set({ isLoadingCategory: true, categoryError: null });
-        const [res, error] = await tryCatch(categoriesService.create(data));
-        if (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
-            console.error('addCategory: errore durante la creazione', errorMessage);
-            set({ categoryError: errorMessage, isLoadingCategory: false });
-            return { success: false };
-        }
-
+        set({ categoryError: null });
+        const res = await categoriesService.create(data);
         console.log('addCategory: risposta ricevuta', { res });
         set(s => ({
             categories: [...s.categories, res].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
-            isLoadingCategory: false,
             error: null
         }));
         return { success: true };
@@ -101,8 +93,8 @@ export const createCategorySlice: StateCreator<
             categoriesToDelete: s.categoriesToDelete.filter(id => id !== categoryId)
         }));
     },
-    setError: (message) => set({ categoryError: message }),
-    clearError: () => set({ categoryError: null }),
+    //setError: (message) => set({ categoryError: message }),
+    //clearError: () => set({ categoryError: null }),
     addIdToDelete: (categoryId) => {
         set(s => {
             const exists = s.categoriesToDelete.includes(categoryId);

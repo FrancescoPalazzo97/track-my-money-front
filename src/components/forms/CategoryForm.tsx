@@ -3,6 +3,7 @@ import { store } from "../../store/store"
 import BaseButton from "../ui/BaseButton";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import { CategoryInputSchema } from "../../schemas/api.schemas";
+import { useTryCatch } from "../../hooks/useTryCatch";
 
 const CategoryForm = () => {
 
@@ -41,8 +42,12 @@ const CategoryForm = () => {
             return;
         }
         console.log('Submitting form with values:', validateData.data);
-        const { success } = await addCategory(validateData.data);
-        if (success) closeModal();
+        const [, error] = await useTryCatch(addCategory(validateData.data));
+        if (error) {
+            setError(error.message);
+            return;
+        }
+        closeModal();
     };
 
     return (

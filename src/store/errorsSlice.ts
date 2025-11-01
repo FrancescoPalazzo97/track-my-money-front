@@ -20,6 +20,7 @@ export const createErrorsSlice: StateCreator<
 > = (set) => ({
     errorMessage: null,
     setError: (message = 'Errore sconosciuto') => {
+        console.log('Il messaggio passato a setError è: ', message)
         set({ errorMessage: message });
     },
     clearError: () => {

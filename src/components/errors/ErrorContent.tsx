@@ -15,6 +15,7 @@ const ErrorContent = ({ error }: Props) => {
             clearError: s.clearError
         }))
     );
+    console.log('!!!!!!!!!!!!!', error)
 
     return (
         <div className="space-y-6">

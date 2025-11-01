@@ -10,11 +10,11 @@ const Modal = () => {
             isModalOpen: s.isModalOpen,
             title: s.modalTitle,
             content: s.modalContent,
-            error: s.categoryError,
+            error: s.errorMessage,
             closeModal: s.closeModal
         })))
 
-    return isModalOpen && createPortal((
+    return (isModalOpen || error) && createPortal((
         <div
             className="bg-black/70 backdrop-blur-md p-4 fixed inset-0 flex justify-center items-center z-50"
             onClick={closeModal}
