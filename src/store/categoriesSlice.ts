@@ -18,8 +18,6 @@ type TCategoriesActions = {
     addCategory: (data: TCategoryInput) => Promise<{ success: boolean }>,
     modifyCategory: (categoryId: string, data: TCategoryUpdate) => Promise<{ success: boolean }>,
     deleteCategory: (categoryId: string) => Promise<void>,
-    //setError: (message: string) => void,
-    //clearError: () => void,
     addIdToDelete: (categoryId: string) => void
 }
 
@@ -38,20 +36,37 @@ export const createCategorySlice: StateCreator<
     [['zustand/immer', never]],
     [],
     TCategoriesSlice
-> = (set) => ({
+> = (set, get) => ({
     ...initialState,
     fetchCategories: async () => {
         console.log('fetchCategories: chiamata iniziata');
         set({ isLoadingCategory: true });
-        const res = await categoriesService.getAll();
-        console.log('fetchCategories: risposta ricevuta', { res, length: res.length });
-        set({ categories: res, isLoadingCategory: false });
+
+        const [data, error] = await tryCatch(categoriesService.getAll());
+
+        if (error) {
+            set({ isLoadingCategory: false });
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            get().setError(errorMessage);
+            return;
+        }
+
+        console.log('fetchCategories: risposta ricevuta', { data, length: data.length });
+        set({ categories: data, isLoadingCategory: false });
     },
     fetchCategoryById: async () => { },
     addCategory: async (data): Promise<{ success: boolean }> => {
         console.log('addCategory: chiamata iniziata', { data });
         set({ categoryError: null });
-        const res = await categoriesService.create(data);
+
+        const [res, error] = await tryCatch(categoriesService.create(data));
+
+        if (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            get().setError(errorMessage); // Chiama azione dell'errorSlice
+            return { success: false };
+        }
+
         console.log('addCategory: risposta ricevuta', { res });
         set(s => ({
             categories: [...s.categories, res].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
@@ -63,8 +78,16 @@ export const createCategorySlice: StateCreator<
         if (data.parentCategory === '') {
             delete data.parentCategory
         }
-        console.log('addCategory: chiamata iniziata', { categoryId, data });
-        const res = await categoriesService.update(categoryId, data);
+        console.log('modifyCategory: chiamata iniziata', { categoryId, data });
+
+        const [res, error] = await tryCatch(categoriesService.update(categoryId, data));
+
+        if (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            get().setError(errorMessage); // Chiama azione dell'errorSlice
+            return { success: false };
+        }
+
         console.log('modifyCategory: risposta ricevuta', { res });
         set(s => ({
             categories: s.categories.map(c => c._id === res._id ? res : c)
@@ -85,8 +108,6 @@ export const createCategorySlice: StateCreator<
             categoriesToDelete: s.categoriesToDelete.filter(id => id !== categoryId)
         }));
     },
-    //setError: (message) => set({ categoryError: message }),
-    //clearError: () => set({ categoryError: null }),
     addIdToDelete: (categoryId) => {
         set(s => {
             const exists = s.categoriesToDelete.includes(categoryId);

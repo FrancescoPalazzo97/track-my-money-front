@@ -1,11 +1,9 @@
 import type { StateCreator } from "zustand";
-import type { TGetTransactionsQuery, TTransaction, TTransactionInput, TTransactionUpdate } from "../types/api.types";
-import { categoriesService } from "../services/categoriesService";
+import type { TTransaction, TTransactionInput } from "../types/api.types";
 import type { TStore } from "../types/store";
-import { tryCatch } from "../lib/tryCatch";
-import { success } from "zod";
 import { transactionsService } from "../services/transactionsService";
-import dayjs from "dayjs";
+import { tryCatch } from "../lib/tryCatch";
+import { calculateDateRange } from "../lib/utility";
 
 type TTransactionsState = {
     transactions: TTransaction[],
@@ -31,12 +29,6 @@ const initialState: TTransactionsState = {
     transactionError: null
 }
 
-const baseQuery = {
-    startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-    endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
-    baseCurrency: 'EUR'
-}
-
 export type TTransactionsSlice = TTransactionsState & TTransactionsActions;
 
 export const createTransactionSlice: StateCreator<
@@ -44,14 +36,28 @@ export const createTransactionSlice: StateCreator<
     [['zustand/immer', never]],
     [],
     TTransactionsSlice
-> = (set) => ({
+> = (set, get) => ({
     ...initialState,
-    fetchTransactions: async (query: TGetTransactionsQuery = baseQuery) => {
-        console.log('fetchTransactions: chiamata iniziata');
+    fetchTransactions: async () => {
+        const { date } = get();
+
+        const { startDate, endDate } = calculateDateRange(date);
+
         set({ isLoadingTransaction: true });
-        const res = await transactionsService.getAll(query);
-        console.log('fetchTransactions: risposta ricevuta: ', { res, length: res.length });
-        set({ transactions: res, isLoadingTransaction: false });
+        const [data, error] = await tryCatch(
+            transactionsService.getAll({ startDate, endDate, baseCurrency: 'EUR' })
+        );
+
+        if (error) {
+            set({ isLoadingTransaction: false });
+            get().setError(error.message);
+            return;
+        }
+
+        set({
+            transactions: data || [],
+            isLoadingTransaction: false
+        });
     },
     fetchTransactionById: async (transactionId) => {
         console.log('fetchTransactionById: chiamata iniziata', { transactionId });

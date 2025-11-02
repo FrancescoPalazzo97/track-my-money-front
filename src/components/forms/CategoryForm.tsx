@@ -3,7 +3,6 @@ import { store } from "../../store/store"
 import BaseButton from "../ui/BaseButton";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import { CategoryInputSchema, CategoryUpdateSchema } from "../../schemas/api.schemas";
-import { useTryCatch } from "../../hooks/useTryCatch";
 import { useEffect } from "react";
 
 type Props = {
@@ -57,33 +56,24 @@ const CategoryForm = ({ categoryId }: Props) => {
             return;
         }
         console.log('Submitting form with values:', validateData.data);
-        const [, error] = await useTryCatch(addCategory(validateData.data));
-        if (error) {
-            setError(error.message);
-            return;
-        }
+        addCategory(validateData.data)
         closeModal();
     };
 
     const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Implementa la logica di modifica della categoria qui
-        const validateData = CategoryUpdateSchema.safeParse({ name, type, parentCategory });
-        if (!validateData.success) {
-            setError(validateData.error.message);
-            return;
-        }
-        if (validateData.data.parentCategory === categoryId) {
-            setError('Una categoria non può essere la propria categoria padre!');
-            return;
-        }
         if (categoryId) {
-            console.log('Modifying category with values:', { name, type, parentCategory });
-            const [, error] = await useTryCatch(modifyCategory(categoryId, validateData.data));
-            if (error) {
-                setError(error.message);
+            const validateData = CategoryUpdateSchema.safeParse({ name, type, parentCategory });
+            if (!validateData.success) {
+                setError(validateData.error.message);
                 return;
             }
+            if (validateData.data.parentCategory === categoryId) {
+                setError('Una categoria non può essere la propria categoria padre!');
+                return;
+            }
+            console.log('Modifying category with values:', { name, type, parentCategory });
+            modifyCategory(categoryId, validateData.data)
             closeModal();
         }
     }

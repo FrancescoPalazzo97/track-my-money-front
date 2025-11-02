@@ -21,9 +21,9 @@ const Header = () => {
                     <ul className='flex gap-2 justify-center'>
                         <li>
                             <BaseNavLink
-                                to='/'
+                                to='/transactions'
                             >
-                                Home
+                                Transazioni
                             </BaseNavLink>
                         </li>
                         <li>

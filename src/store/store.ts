@@ -6,6 +6,7 @@ import { createModalSlice } from './modalSlice';
 import { createFormSlice } from './formSlice';
 import { createTransactionSlice } from './TransactionsSlice';
 import { createErrorsSlice } from './errorsSlice';
+import { createDateSlice } from './dateSlice';
 
 export const store = create<TStore>()(
     immer((...a) => ({
@@ -13,6 +14,7 @@ export const store = create<TStore>()(
         ...createModalSlice(...a),
         ...createFormSlice(...a),
         ...createTransactionSlice(...a),
-        ...createErrorsSlice(...a)
+        ...createErrorsSlice(...a),
+        ...createDateSlice(...a)
     }))
 )

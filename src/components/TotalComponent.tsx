@@ -20,9 +20,9 @@ const TotalComponent = () => {
             const amount = transaction.amount;
 
             // La categoria è già inclusa nell'oggetto transaction
-            if (transaction.category.type === 'income') {
+            if (transaction.category?.type === 'income') {
                 totalIncome += amount;
-            } else if (transaction.category.type === 'expense') {
+            } else if (transaction.category?.type === 'expense') {
                 totalExpense += amount;
             }
         });
