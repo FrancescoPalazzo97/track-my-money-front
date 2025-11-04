@@ -18,7 +18,7 @@ const TransactionForm = ({ transactionId }: Props) => {
         currency, setCurrency,
         tempType, setTempType,
         category, setCategory,
-        description, setDescription,
+        description, descriptionError, descriptionCharsRemains, setDescription,
         categories, transactions,
         addTransaction, modifyTransaction,
         closeModal,
@@ -39,6 +39,8 @@ const TransactionForm = ({ transactionId }: Props) => {
             category: s.category,
             setCategory: s.setCategory,
             description: s.description,
+            descriptionError: s.descriptionError,
+            descriptionCharsRemains: s.descriptionCharsRemains,
             setDescription: s.setDescription,
             categories: s.categories,
             transactions: s.transactions,
@@ -149,7 +151,7 @@ const TransactionForm = ({ transactionId }: Props) => {
                                 type="number"
                                 step="0.01"
                                 min="0"
-                                value={amount}
+                                value={amount ? amount : ''}
                                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                                 placeholder="0.00"
                                 className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700/50 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200"
@@ -223,15 +225,16 @@ const TransactionForm = ({ transactionId }: Props) => {
                 {/* Descrizione */}
                 <div>
                     <label className="block text-sm font-medium">
-                        <h3 className="mb-1.5">Descrizione (opzionale)</h3>
+                        <h3 className="mb-1.5">Descrizione (opzionale) ({descriptionCharsRemains} caratteri rimasti)</h3>
                         <textarea
                             id="description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Aggiungi dettagli sulla transazione..."
                             rows={3}
-                            className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700/50 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 resize-none"
+                            className={`w-full px-4 py-2.5 bg-slate-800 border border-slate-700/50 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 resize-none ${descriptionError ? 'border-red-500/80 focus:ring-red-500/50 focus:border-red-500/50' : ''}`}
                         />
+                        {descriptionError && <p className="mt-1 text-sm text-red-500 absolute">{descriptionError}</p>}
                     </label>
                 </div>
 
@@ -244,7 +247,7 @@ const TransactionForm = ({ transactionId }: Props) => {
                         Annulla
                     </BaseButton>
                     <BaseButton
-                        disabled={title.trim() === '' || amount <= 0 || category === ''}
+                        disabled={title.trim() === '' || (amount && amount <= 0) || category === ''}
                         type="submit"
                     >
                         Salva

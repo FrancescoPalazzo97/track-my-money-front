@@ -5,9 +5,12 @@ import dayjs from "dayjs";
 import { validateChars } from "../lib/utility";
 
 
-type TTransactionFormState = TTransactionInput & {
+type TTransactionFormState = Omit<TTransactionInput, 'amount'> & {
+    amount: number | null
     titleError: string | null,
-    tempType: string
+    tempType: string,
+    descriptionError: string | null,
+    descriptionCharsRemains: number
 };
 
 type TTransactionFormActions = {
@@ -25,12 +28,14 @@ export type TTransactionFormSlice = TTransactionFormState & TTransactionFormActi
 const initialState: TTransactionFormState = {
     title: '',
     titleError: null,
-    transactionDate: dayjs().format('YYYY-MM-DD'),
-    amount: 0,
+    transactionDate: dayjs().format('YYYY-MM-DDTHH:mm'),
+    amount: null,
     currency: 'EUR',
     tempType: '',
     category: '',
-    description: ''
+    description: undefined,
+    descriptionError: null,
+    descriptionCharsRemains: 100
 }
 
 export const createTransactionFormSlice: StateCreator<
@@ -52,7 +57,7 @@ export const createTransactionFormSlice: StateCreator<
         set({ title: value })
     },
     setTransactionDate: (value) => {
-        if (value) {
+        if (value && dayjs(value).isValid()) {
             set({ transactionDate: value })
         }
     },
@@ -64,12 +69,24 @@ export const createTransactionFormSlice: StateCreator<
         set({ currency: value })
     },
     setTempType: (value) => {
-        set({ tempType: value })
+        if (value === 'income' || value === 'expense') {
+            set({ tempType: value })
+        }
     },
     setCategory: (value) => {
-        set({ category: value })
+        if (get().categories.some(c => c._id === value)) {
+            set({ category: value })
+        }
     },
     setDescription: (value) => {
-        set({ description: value })
+        set({ descriptionError: null })
+        if (validateChars(value)) {
+            set({ descriptionError: 'Non sono consentiti caratteri speciali!' });
+            return;
+        }
+        set(s => ({
+            description: value,
+            descriptionCharsRemains: s.descriptionCharsRemains - 1
+        }));
     }
 })

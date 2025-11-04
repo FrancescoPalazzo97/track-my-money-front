@@ -22,7 +22,7 @@ export const CategoryUpdateSchema = z.object({
 // Transaction schemas
 export const TransactionInputSchema = z.object({
     title: z.string().min(1, "Il titolo della transazione è obbligatorio"),
-    description: z.string().optional(),
+    description: z.string().max(100, 'la descrizione è troppo lunga. Max 100 caratteri').optional(),
     transactionDate: z.string(),
     amount: z.number().positive("L'importo deve essere positivo"),
     currency: CurrencySchema,
