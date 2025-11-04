@@ -7,7 +7,7 @@ import { tryCatch } from "../lib/tryCatch";
 type TCategoriesState = {
     categories: TCategory[],
     categoriesToDelete: string[],
-    category: TCategory | null,
+    selectedCategory: TCategory | null,
     isLoadingCategory: boolean,
     categoryError: string | null
 }
@@ -24,7 +24,7 @@ type TCategoriesActions = {
 const initialState: TCategoriesState = {
     categories: [],
     categoriesToDelete: [],
-    category: null,
+    selectedCategory: null,
     isLoadingCategory: false,
     categoryError: null
 }

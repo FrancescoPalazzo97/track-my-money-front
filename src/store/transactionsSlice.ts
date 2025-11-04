@@ -8,8 +8,7 @@ import { calculateDateRange } from "../lib/utility";
 type TTransactionsState = {
     transactions: TTransaction[],
     transaction: TTransaction | null,
-    isLoadingTransaction: boolean,
-    transactionError: string | null
+    isLoadingTransaction: boolean
 }
 
 type TTransactionsActions = {
@@ -17,16 +16,13 @@ type TTransactionsActions = {
     fetchTransactionById: (transactionId: string) => Promise<void>,
     addTransaction: (data: TTransactionInput) => Promise<{ success: boolean }>,
     modifyTransaction: (transactionId: string) => Promise<{ success: boolean }>,
-    deleteTransaction: (transactionId: string) => Promise<{ success: boolean }>,
-    setTransactionError: (message: string) => void,
-    clearTransactionError: () => void
+    deleteTransaction: (transactionId: string) => Promise<{ success: boolean }>
 }
 
 const initialState: TTransactionsState = {
     transactions: [],
     transaction: null,
-    isLoadingTransaction: false,
-    transactionError: null
+    isLoadingTransaction: false
 }
 
 export type TTransactionsSlice = TTransactionsState & TTransactionsActions;
@@ -74,7 +70,5 @@ export const createTransactionSlice: StateCreator<
     },
     deleteTransaction: async () => {
         return { success: true }
-    },
-    setTransactionError: () => { },
-    clearTransactionError: () => { },
+    }
 })
