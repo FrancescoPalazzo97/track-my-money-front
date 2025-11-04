@@ -4,6 +4,7 @@ import type { TStore } from "../types/store";
 import { transactionsService } from "../services/transactionsService";
 import { tryCatch } from "../lib/tryCatch";
 import { calculateDateRange } from "../lib/utility";
+import dayjs from "dayjs";
 
 type TTransactionsState = {
     transactions: TTransaction[],
@@ -14,7 +15,7 @@ type TTransactionsState = {
 type TTransactionsActions = {
     fetchTransactions: () => Promise<void>,
     fetchTransactionById: (transactionId: string) => Promise<void>,
-    addTransaction: (data: TTransactionInput) => Promise<{ success: boolean }>,
+    addTransaction: (data: TTransactionInput, type: string) => Promise<{ success: boolean }>,
     modifyTransaction: (transactionId: string) => Promise<{ success: boolean }>,
     deleteTransaction: (transactionId: string) => Promise<{ success: boolean }>
 }
@@ -62,7 +63,24 @@ export const createTransactionSlice: StateCreator<
         console.log('fetchTransactionById: risposta ricevuta', { res });
         set({ transaction: res, isLoadingTransaction: false });
     },
-    addTransaction: async (data) => {
+    addTransaction: async (data, type) => {
+        console.log('addTransaction: chiamata iniziata', { data });
+        const [res, error] = await tryCatch(transactionsService.create(data));
+
+        if (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            get().setError(errorMessage); // Chiama azione dell'errorSlice
+            return { success: false };
+        }
+
+        console.log('addTransaction: riposta ricevuta', { res });
+        set(s => {
+            const newTransaction = { ...res, category: { _id: res.category, type } };
+            const sortedTransactions = [...s.transactions, newTransaction].sort((a, b) =>
+                dayjs(b.transactionDate).valueOf() - dayjs(a.transactionDate).valueOf()
+            );
+            return { transactions: sortedTransactions };
+        })
         return { success: true }
     },
     modifyTransaction: async () => {

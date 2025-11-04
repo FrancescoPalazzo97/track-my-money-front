@@ -38,7 +38,7 @@ export const createFormSlice: StateCreator<
         const { value } = e.target;
         set({ nameError: null });
         if (!value.trim()) {
-            set({ nameError: 'In nome della categoria non può essere vuoto!' });
+            set({ nameError: 'Il campo non può essere vuoto!' });
         }
         if (validateChars(value)) {
             set({ nameError: 'Non sono consentiti caratteri speciali!' });

@@ -46,7 +46,7 @@ const TotalComponent = () => {
                         <span className="text-slate-400 text-xs sm:text-sm">Entrate</span>
                     </div>
                     <p className="text-emerald-400 font-semibold text-base sm:text-lg truncate">
-                        +€{income.toFixed(2)}
+                        +{income.toFixed(2)}&euro;
                     </p>
                 </div>
 
@@ -57,7 +57,7 @@ const TotalComponent = () => {
                         <span className="text-slate-400 text-xs sm:text-sm">Spese</span>
                     </div>
                     <p className="text-red-400 font-semibold text-base sm:text-lg truncate">
-                        -€{expense.toFixed(2)}
+                        -{expense.toFixed(2)}&euro;
                     </p>
                 </div>
             </div>
@@ -67,7 +67,7 @@ const TotalComponent = () => {
                 <div className="flex justify-between items-center gap-2">
                     <span className="text-slate-300 font-medium text-sm sm:text-base">Bilancio totale</span>
                     <span className={`text-lg sm:text-xl font-bold truncate ${total >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {total >= 0 ? '+' : ''}€{total.toFixed(2)}
+                        {total >= 0 ? '+' : ''}{total.toFixed(2)}&euro;
                     </span>
                 </div>
             </div>

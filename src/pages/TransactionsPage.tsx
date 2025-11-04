@@ -1,12 +1,24 @@
+import { useShallow } from 'zustand/shallow';
 import ChangeDate from '../components/ChangeDate';
+import TransactionForm from '../components/forms/TransactionForm';
 import TransactionsList from '../components/lists/TransactionsList'
 import TotalComponent from '../components/TotalComponent';
 import BaseButton from '../components/ui/BaseButton';
+import { store } from '../store/store';
 
 const TransactionsPage = () => {
 
-    const handleCreate = () => {
+    const { openModal } = store(
+        useShallow(s => ({
+            openModal: s.openModal
+        }))
+    );
 
+    const handleCreate = () => {
+        openModal(
+            <TransactionForm />,
+            'Aggiungi nuova transazione'
+        );
     }
 
     return (
@@ -16,7 +28,7 @@ const TransactionsPage = () => {
                     <ChangeDate />
                     <TotalComponent />
                     <BaseButton
-                        onClick={() => { }}
+                        onClick={handleCreate}
                         fullWidth
                         truncate
                         size="lg"
