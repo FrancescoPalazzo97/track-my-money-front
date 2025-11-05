@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { store } from "../store/store";
 import { useShallow } from "zustand/shallow";
 import ErrorContent from "./errors/ErrorContent";
+import { X } from "lucide-react";
 
 const Modal = () => {
 
@@ -28,6 +29,12 @@ const Modal = () => {
                     <h2 className="text-xl font-semibold text-slate-100">
                         {title}
                     </h2>
+                    <button
+                        onClick={closeModal}
+                        className="text-slate-400 hover:text-slate-200 transition-colors duration-200"
+                    >
+                        <X />
+                    </button>
                 </div>
 
                 {/* Content */}

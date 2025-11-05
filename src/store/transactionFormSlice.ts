@@ -73,8 +73,9 @@ export const createTransactionFormSlice: StateCreator<
         }
     },
     setAmount: (value) => {
-        console.log(typeof value, value)
-        set({ amount: value })
+        if (value && typeof value === 'number') {
+            set({ amount: value })
+        }
     },
     setCurrency: (value) => {
         set({ currency: value })

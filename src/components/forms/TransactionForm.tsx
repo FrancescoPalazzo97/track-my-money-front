@@ -4,6 +4,7 @@ import { store } from '../../store/store';
 import BaseButton from '../ui/BaseButton';
 import { TransactionInputSchema, TransactionUpdateSchema } from '../../schemas/api.schemas';
 import { TrendingDown, TrendingUp } from 'lucide-react';
+import dayjs from 'dayjs';
 
 type Props = {
     transactionId?: string;
@@ -55,7 +56,7 @@ const TransactionForm = ({ transactionId }: Props) => {
         const transaction = transactions.find(t => t._id === transactionId);
         if (transaction) {
             setTitle(transaction.title);
-            setTransactionDate(transaction.transactionDate);
+            setTransactionDate(dayjs(transaction.transactionDate).format('YYYY-MM-DDTHH:mm'));
             setAmount(transaction.amount);
             setCurrency(transaction.currency);
             setCategory(transaction.category._id);
@@ -84,23 +85,23 @@ const TransactionForm = ({ transactionId }: Props) => {
 
     const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // if (transactionId) {
-        //     const validateData = TransactionUpdateSchema.safeParse({
-        //         title,
-        //         transactionDate,
-        //         amount,
-        //         currency,
-        //         category,
-        //         description
-        //     });
-        //     if (!validateData.success) {
-        //         setError(validateData.error.message);
-        //         return;
-        //     }
-        //     console.log('Modifying transaction with values:', validateData.data);
-        //     await modifyTransaction(transactionId, validateData.data);
-        //     closeModal();
-        // }
+        if (transactionId) {
+            const validateData = TransactionUpdateSchema.safeParse({
+                title,
+                transactionDate,
+                amount,
+                currency,
+                category,
+                description
+            });
+            if (!validateData.success) {
+                setError(validateData.error.message);
+                return;
+            }
+            console.log('Modifying transaction with values:', validateData.data);
+            await modifyTransaction(transactionId, validateData.data, tempType);
+            closeModal();
+        }
     };
 
     // Raggruppa le categorie per tipo
@@ -239,20 +240,13 @@ const TransactionForm = ({ transactionId }: Props) => {
                 </div>
 
                 {/* Bottoni */}
-                <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-800/50">
-                    <BaseButton
-                        onClick={() => { closeModal() }}
-                        variant="secondary"
-                    >
-                        Annulla
-                    </BaseButton>
-                    <BaseButton
-                        disabled={title.trim() === '' || (amount && amount <= 0) || category === ''}
-                        type="submit"
-                    >
-                        Salva
-                    </BaseButton>
-                </div>
+                <BaseButton
+                    //disabled={title.trim() === '' || (amount && amount <= 0) || category === ''}
+                    type="submit"
+                    fullWidth
+                >
+                    Salva
+                </BaseButton>
             </form>
         </div>
     )

@@ -1,11 +1,13 @@
-import { useEffect } from 'react'
-import { useShallow } from 'zustand/shallow'
-import { store } from '../store/store'
-import { Calendar, Coins, FileText, Clock, ArrowRightLeft } from 'lucide-react'
-import LabelPrice from './labels/LabelPrice'
-import TypeCategoryLabel from './labels/TypeCategoryLabel'
-import Loader from './Loader'
-import useDayjs from '../hooks/useDayjs'
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { store } from '../store/store';
+import { Calendar, Coins, FileText, Clock, ArrowRightLeft, Trash2, Pencil } from 'lucide-react';
+import LabelPrice from './labels/LabelPrice';
+import TypeCategoryLabel from './labels/TypeCategoryLabel';
+import Loader from './Loader';
+import useDayjs from '../hooks/useDayjs';
+import TransactionForm from './forms/TransactionForm';
+import BaseButton from './ui/BaseButton';
 
 type Props = {
     transactionId: string
@@ -13,12 +15,14 @@ type Props = {
 
 const TransactionDetails = ({ transactionId }: Props) => {
 
-    const { fetchTransactionById, transaction, categories, isLoading } = store(
+    const { fetchTransactionById, transaction, categories, isLoading, openModal, setInitialState } = store(
         useShallow(s => ({
             fetchTransactionById: s.fetchTransactionById,
             transaction: s.transaction,
             categories: s.categories,
-            isLoading: s.isLoadingTransaction
+            isLoading: s.isLoadingTransaction,
+            openModal: s.openModal,
+            setInitialState: s.setInitialState
         }))
     )
 
@@ -50,6 +54,25 @@ const TransactionDetails = ({ transactionId }: Props) => {
 
     // Trova la categoria padre se esiste
     const findParentCategory = categories.find(c => c._id === findCategoryById?.parentCategory);
+
+    const handleEdit = () => {
+        // Implementa la logica per modificare la transazione
+        const newState = {
+            title: transaction.title,
+            transactionDate: transaction.transactionDate,
+            amount: transaction.amount,
+            currency: transaction.currency,
+            tempType: transaction.category.type,
+            category: transaction.category._id,
+            description: transaction.description || ''
+        }
+        console.log(newState);
+        setInitialState(newState);
+        openModal(
+            <TransactionForm transactionId={transaction._id} />,
+            'Modifica transazione'
+        );
+    }
 
     return (
         <div className='space-y-6'>
@@ -170,6 +193,20 @@ const TransactionDetails = ({ transactionId }: Props) => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-800/50">
+                    <BaseButton
+                        onClick={handleEdit}
+                        variant="yellow"
+                    >
+                        <Pencil className='w-5 h-5' />
+                    </BaseButton>
+                    <BaseButton
+                        variant='red'
+                    >
+                        <Trash2 className='w-5 h-5' />
+                    </BaseButton>
                 </div>
             </div>
         </div>

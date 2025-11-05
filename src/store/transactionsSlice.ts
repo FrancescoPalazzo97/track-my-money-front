@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { TTransaction, TTransactionInput } from "../types/api.types";
+import type { TTransaction, TTransactionInput, TTransactionUpdate } from "../types/api.types";
 import type { TStore } from "../types/store";
 import { transactionsService } from "../services/transactionsService";
 import { tryCatch } from "../lib/tryCatch";
@@ -16,7 +16,7 @@ type TTransactionsActions = {
     fetchTransactions: () => Promise<void>,
     fetchTransactionById: (transactionId: string) => Promise<void>,
     addTransaction: (data: TTransactionInput, type: string) => Promise<{ success: boolean }>,
-    modifyTransaction: (transactionId: string) => Promise<{ success: boolean }>,
+    modifyTransaction: (transactionId: string, data: TTransactionUpdate, type: string) => Promise<{ success: boolean }>,
     deleteTransaction: (transactionId: string) => Promise<{ success: boolean }>
 }
 
@@ -83,7 +83,21 @@ export const createTransactionSlice: StateCreator<
         })
         return { success: true }
     },
-    modifyTransaction: async () => {
+    modifyTransaction: async (transactionId, data, type) => {
+        if (data.description === '') {
+            delete data.description;
+        }
+        console.log('modifyTransaction: chiamata iniziata', { data });
+        const [res, error] = await tryCatch(transactionsService.update(transactionId, data));
+        if (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            get().setError(errorMessage); // Chiama azione dell'errorSlice
+            return { success: false };
+        }
+        console.log('modifyTransaction: risposta ricevuta', { res });
+        set(s => ({
+            transactions: s.transactions.map(t => t._id === res._id ? { ...res, category: { _id: res.category, type } } : t)
+        }))
         return { success: true }
     },
     deleteTransaction: async () => {
