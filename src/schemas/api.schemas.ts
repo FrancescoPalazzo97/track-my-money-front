@@ -1,5 +1,4 @@
 import z from "zod";
-import { it } from "zod/locales";
 
 // Common schemas
 export const CurrencySchema = z.string();

@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
 import { getGroupedCategories } from '../../lib/getGroupedCategories';
-import { Loader } from 'lucide-react';
 import EmptyList from './EmptyList';
 import GroupedCategoryCard from '../cards/GroupedCategoriesCard';
 import CategoriesCard from '../cards/CategoriesCard';
+import CategoriesListSkeleton from './CategoriesListSkeleton';
 
 type Props = {
     mode: 'view' | 'edit'
@@ -26,9 +26,7 @@ const CategoriesList = ({ mode }: Props) => {
     );
 
     if (isLoading) {
-        return (
-            <Loader />
-        )
+        return <CategoriesListSkeleton mode={mode} />;
     }
 
 

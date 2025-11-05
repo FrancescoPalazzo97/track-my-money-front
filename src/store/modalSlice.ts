@@ -1,6 +1,5 @@
 import type { StateCreator } from "zustand";
 import type { TStore } from "../types/store";
-import { store } from "./store";
 
 type TModalState = {
     isModalOpen: boolean,

@@ -2,12 +2,14 @@ import { useMemo } from 'react'
 import { store } from '../store/store';
 import { useShallow } from 'zustand/shallow';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import TotalComponentSkeleton from './TotalComponentSkeleton';
 
 const TotalComponent = () => {
 
-    const { transactions } = store(
+    const { transactions, isLoading } = store(
         useShallow(s => ({
-            transactions: s.transactions
+            transactions: s.transactions,
+            isLoading: s.isLoadingTransaction
         }))
     );
 
@@ -33,6 +35,11 @@ const TotalComponent = () => {
             total: totalIncome - totalExpense
         };
     }, [transactions]);
+
+    // Mostra skeleton durante il caricamento
+    if (isLoading) {
+        return <TotalComponentSkeleton />;
+    }
 
     return (
         <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl p-3 sm:p-5 space-y-3 sm:space-y-4">

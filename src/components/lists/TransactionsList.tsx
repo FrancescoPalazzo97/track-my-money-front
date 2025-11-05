@@ -1,8 +1,8 @@
 import { store } from '../../store/store';
 import { useShallow } from 'zustand/shallow';
-import { Loader } from 'lucide-react';
 import EmptyList from './EmptyList';
 import TransactionsCard from '../cards/TransactionsCard';
+import TransactionsListSkeleton from './TransactionsListSkeleton';
 
 const TransactionsList = () => {
     const { transactions, isLoading } = store(
@@ -13,9 +13,7 @@ const TransactionsList = () => {
     )
 
     if (isLoading) {
-        return (
-            <Loader />
-        )
+        return <TransactionsListSkeleton />;
     }
 
     if (transactions.length === 0) {
