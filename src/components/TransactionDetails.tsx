@@ -8,6 +8,7 @@ import Loader from './Loader';
 import useDayjs from '../hooks/useDayjs';
 import TransactionForm from './forms/TransactionForm';
 import BaseButton from './ui/BaseButton';
+import ConfirmDelete from './ConfirmDelete';
 
 type Props = {
     transactionId: string
@@ -15,14 +16,16 @@ type Props = {
 
 const TransactionDetails = ({ transactionId }: Props) => {
 
-    const { fetchTransactionById, transaction, categories, isLoading, openModal, setInitialState } = store(
+    const { fetchTransactionById, transaction, categories, isLoading, openModal, setInitialState, deleteTransaction, closeModal } = store(
         useShallow(s => ({
             fetchTransactionById: s.fetchTransactionById,
             transaction: s.transaction,
             categories: s.categories,
             isLoading: s.isLoadingTransaction,
             openModal: s.openModal,
-            setInitialState: s.setInitialState
+            setInitialState: s.setInitialState,
+            deleteTransaction: s.deleteTransaction,
+            closeModal: s.closeModal
         }))
     )
 
@@ -71,6 +74,21 @@ const TransactionDetails = ({ transactionId }: Props) => {
         openModal(
             <TransactionForm transactionId={transaction._id} />,
             'Modifica transazione'
+        );
+    }
+
+    const handleDelete = () => {
+        // Implementa la logica per eliminare la transazione
+        console.log('Elimina transazione');
+        openModal(
+            <ConfirmDelete
+                title="Conferma eliminazione"
+                message="Sei sicuro di voler eliminare questa transazione?"
+                onConfirm={() => deleteTransaction(transaction._id)}
+                onCancel={() => closeModal()}
+                itemName={transaction.title}
+            />,
+            'Elimina transazione'
         );
     }
 
@@ -203,6 +221,7 @@ const TransactionDetails = ({ transactionId }: Props) => {
                         <Pencil className='w-5 h-5' />
                     </BaseButton>
                     <BaseButton
+                        onClick={handleDelete}
                         variant='red'
                     >
                         <Trash2 className='w-5 h-5' />

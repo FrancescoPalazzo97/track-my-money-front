@@ -100,7 +100,19 @@ export const createTransactionSlice: StateCreator<
         }))
         return { success: true }
     },
-    deleteTransaction: async () => {
+    deleteTransaction: async (transactionId) => {
+        console.log('deleteTransaction: chiamata iniziata', { transactionId });
+        const [, error] = await tryCatch(transactionsService.delete(transactionId));
+        if (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
+            console.error('deleteTransaction: errore durante l\'eliminazione:', errorMessage);
+            throw error;
+        }
+        console.log('deleteTransaction: transazione eliminata con successo');
+        set(s => ({
+            transactions: s.transactions.filter(t => t._id !== transactionId)
+        }))
+        get().closeModal();
         return { success: true }
     }
 })
