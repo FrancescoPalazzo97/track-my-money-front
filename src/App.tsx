@@ -1,12 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { store } from "./store/store";
 import DefaultLayout from "./layouts/DefaultLayout";
-import TransactionsPage from "./pages/TransactionsPage";
-import SettingsPage from "./pages/SettingsPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import ModifyCategoriesPage from "./pages/ModifyCategoriesPage";
+import LoadingFallback from "./components/LoadingFallback";
 import { useShallow } from "zustand/shallow";
+
+// Lazy loading delle pagine per code-splitting
+const TransactionsPage = lazy(() => import("./pages/TransactionsPage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
+const ModifyCategoriesPage = lazy(() => import("./pages/ModifyCategoriesPage"));
 
 function App() {
 
@@ -35,10 +38,26 @@ function App() {
       <Routes>
         <Route Component={DefaultLayout}>
           <Route index element={<Navigate to="/transactions" />} />
-          <Route path="/transactions" element={<TransactionsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/modify-categories" element={<ModifyCategoriesPage />} />
+          <Route path="/transactions" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <TransactionsPage />
+            </Suspense>
+          } />
+          <Route path="/categories" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <CategoriesPage />
+            </Suspense>
+          } />
+          <Route path="/settings" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <SettingsPage />
+            </Suspense>
+          } />
+          <Route path="/modify-categories" element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ModifyCategoriesPage />
+            </Suspense>
+          } />
         </Route>
       </Routes>
     </BrowserRouter>
