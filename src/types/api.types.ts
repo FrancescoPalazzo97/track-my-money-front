@@ -32,7 +32,7 @@ export type TTransaction = {
     };
     description?: string | undefined;
     _id: string;
-    amountInEUR?: number;
+    amountInEUR: number;
     createdAt: string;
     updatedAt: string;
 }

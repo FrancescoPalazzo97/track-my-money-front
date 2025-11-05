@@ -8,13 +8,15 @@ import { store } from '../store/store';
 
 const TransactionsPage = () => {
 
-    const { openModal } = store(
+    const { openModal, setInitialState } = store(
         useShallow(s => ({
-            openModal: s.openModal
+            openModal: s.openModal,
+            setInitialState: s.setInitialState
         }))
     );
 
     const handleCreate = () => {
+        setInitialState();
         openModal(
             <TransactionForm />,
             'Aggiungi nuova transazione'

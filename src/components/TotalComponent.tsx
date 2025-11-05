@@ -17,7 +17,7 @@ const TotalComponent = () => {
         let totalExpense = 0;
 
         transactions.forEach(transaction => {
-            const amount = transaction.amount;
+            const amount = transaction.amountInEUR;
 
             // La categoria è già inclusa nell'oggetto transaction
             if (transaction.category?.type === 'income') {

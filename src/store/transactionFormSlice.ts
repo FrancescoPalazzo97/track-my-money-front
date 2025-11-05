@@ -13,6 +13,16 @@ type TTransactionFormState = Omit<TTransactionInput, 'amount'> & {
     descriptionCharsRemains: number
 };
 
+type TNewState = {
+    title?: string,
+    transactionDate?: string,
+    amount?: number,
+    currency?: string,
+    category?: string,
+    tempType?: string,
+    description?: string
+}
+
 type TTransactionFormActions = {
     setTitle: (value: string) => void,
     setTransactionDate: (value: string | undefined) => void,
@@ -20,7 +30,8 @@ type TTransactionFormActions = {
     setCurrency: (value: string) => void,
     setTempType: (value: string) => void,
     setCategory: (value: string) => void,
-    setDescription: (value: string) => void
+    setDescription: (value: string) => void,
+    setInitialState: (newState?: TNewState) => void
 }
 
 export type TTransactionFormSlice = TTransactionFormState & TTransactionFormActions;
@@ -88,5 +99,27 @@ export const createTransactionFormSlice: StateCreator<
             description: value,
             descriptionCharsRemains: s.descriptionCharsRemains - 1
         }));
+    },
+    setInitialState: (newState) => {
+        if (!newState) {
+            set({
+                ...initialState,
+                transactionDate: dayjs().format('YYYY-MM-DDTHH:mm')
+            });
+            return;
+        }
+
+        const descriptionLength = newState.description?.length ?? 0;
+
+        set({
+            ...initialState,  // Usa lo stato iniziale come base
+            ...newState,      // Sovrascrivi con i valori forniti
+            titleError: null,
+            descriptionError: null,
+            descriptionCharsRemains: 100 - descriptionLength,
+            transactionDate: newState.transactionDate
+                ? dayjs(newState.transactionDate).format('YYYY-MM-DDTHH:mm')
+                : initialState.transactionDate
+        });
     }
 })

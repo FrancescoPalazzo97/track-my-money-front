@@ -5,11 +5,10 @@ import EmptyList from './EmptyList';
 import TransactionsCard from '../cards/TransactionsCard';
 
 const TransactionsList = () => {
-    const { transactions, isLoading, error } = store(
+    const { transactions, isLoading } = store(
         useShallow(s => ({
             transactions: s.transactions,
-            isLoading: s.isLoadingTransaction,
-            error: s.transactionError
+            isLoading: s.isLoadingTransaction
         }))
     )
 
