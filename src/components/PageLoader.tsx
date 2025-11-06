@@ -15,7 +15,7 @@ const PageLoader = () => {
                     <div className="space-y-4">
                         <div className="h-6 w-64 bg-slate-700 rounded"></div>
                         <div className="space-y-3">
-                            {[...Array(3)].map((_, index) => (
+                            {[...Array(8)].map((_, index) => (
                                 <div key={index} className="h-20 bg-slate-800/50 rounded-lg"></div>
                             ))}
                         </div>
