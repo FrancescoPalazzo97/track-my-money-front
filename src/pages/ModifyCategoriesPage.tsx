@@ -57,33 +57,31 @@ const ModifyCategoriesPage = () => {
         : { fullWidth: true };
 
     return (
-        <div className="px-4 pb-6">
-            <div className="max-w-2xl mx-auto">
-                <div className="py-4 gap-4 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto p-4">
+            <div className="pb-4 gap-4 flex items-center justify-between">
+                <BaseButton
+                    onClick={handleCreate}
+                    {...addButtonProps}
+                    truncate
+                    size="lg"
+                >
+                    Aggiungi nuova categoria
+                </BaseButton>
+                {categoriesToDelete.length > 0 && (
                     <BaseButton
-                        onClick={handleCreate}
-                        {...addButtonProps}
-                        truncate
+                        onClick={handleDelete}
+                        className='w-2/4 md:w-1/4 flex items-center justify-center gap-2'
                         size="lg"
+                        variant="red"
                     >
-                        Aggiungi nuova categoria
+                        <Trash className='w-5 h-5' />
+                        <span>({categoriesToDelete.length})</span>
                     </BaseButton>
-                    {categoriesToDelete.length > 0 && (
-                        <BaseButton
-                            onClick={handleDelete}
-                            className='w-2/4 md:w-1/4 flex items-center justify-center gap-2'
-                            size="lg"
-                            variant="red"
-                        >
-                            <Trash className='w-5 h-5' />
-                            <span>({categoriesToDelete.length})</span>
-                        </BaseButton>
-                    )}
-                </div>
-                <CategoriesList
-                    mode="edit"
-                />
+                )}
             </div>
+            <CategoriesList
+                mode="edit"
+            />
         </div>
     )
 }

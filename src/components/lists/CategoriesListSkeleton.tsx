@@ -31,17 +31,19 @@ const CategoriesListSkeleton = ({ mode }: Props) => {
                         </div>
                     ) : (
                         // Skeleton for CategoriesCard (edit mode)
-                        <div className='flex items-center justify-between gap-4'>
-                            <div className='flex items-center gap-3 flex-1 min-w-0'>
-                                {/* Type label with icon */}
-                                <div className="h-8 w-8 bg-slate-700 rounded-full"></div>
-                                {/* Category name */}
-                                <div className='flex-1 h-5 bg-slate-700 rounded'></div>
-                            </div>
-                            {/* Action buttons */}
-                            <div className='flex items-center gap-2 flex-shrink-0'>
-                                <div className="h-9 w-9 bg-slate-700 rounded-lg"></div>
-                                <div className="h-9 w-9 bg-slate-700 rounded-lg"></div>
+                        <div className="space-y-4">
+                            <div className='flex items-center justify-between gap-4'>
+                                <div className='flex items-center gap-3 flex-1 min-w-0'>
+                                    {/* Type label with icon */}
+                                    <div className="h-8 w-8 bg-slate-700 rounded-full"></div>
+                                    {/* Category name */}
+                                    <div className='flex-1 h-5 bg-slate-700 rounded'></div>
+                                </div>
+                                {/* Action buttons */}
+                                <div className='flex items-center gap-2 flex-shrink-0'>
+                                    <div className="h-9 w-9 bg-slate-700 rounded-lg"></div>
+                                    <div className="h-9 w-9 bg-slate-700 rounded-lg"></div>
+                                </div>
                             </div>
                         </div>
                     )}

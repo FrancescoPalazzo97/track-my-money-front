@@ -1,4 +1,5 @@
 import TransactionsPageLoader from './loaders/TransactionsPageLoader';
+import CategoriesPageLoader from './loaders/CategoriesPageLoader';
 
 type RouteLoaderProps = {
     routeName?: 'transactions' | 'categories' | 'modify-categories' | 'settings';
@@ -11,7 +12,11 @@ const RouteLoader = ({ routeName = 'transactions' }: RouteLoaderProps) => {
             return <TransactionsPageLoader />;
 
         case 'categories':
+            return <CategoriesPageLoader mode="view" />;
+
         case 'modify-categories':
+            return <CategoriesPageLoader mode="edit" />;
+
         case 'settings':
         default:
             // Generic loader for routes without specific skeleton
@@ -22,7 +27,7 @@ const RouteLoader = ({ routeName = 'transactions' }: RouteLoaderProps) => {
                             <div className="space-y-4">
                                 <div className="h-6 w-64 bg-slate-700 rounded"></div>
                                 <div className="space-y-3">
-                                    {[...Array(5)].map((_, index) => (
+                                    {[...Array(8)].map((_, index) => (
                                         <div key={index} className="h-20 bg-slate-800/50 rounded-lg"></div>
                                     ))}
                                 </div>
