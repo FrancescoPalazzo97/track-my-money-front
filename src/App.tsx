@@ -3,6 +3,7 @@ import { useEffect, lazy, Suspense } from "react";
 import { store } from "./store/store";
 import DefaultLayout from "./layouts/DefaultLayout";
 import PageLoader from "./components/PageLoader";
+import RouteLoader from "./components/RouteLoader";
 import { useShallow } from "zustand/shallow";
 
 // Lazy imports per code-splitting
@@ -39,10 +40,26 @@ function App() {
         <Routes>
           <Route Component={DefaultLayout}>
             <Route index element={<Navigate to="/transactions" />} />
-            <Route path="/transactions" element={<TransactionsPage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/modify-categories" element={<ModifyCategoriesPage />} />
+            <Route path="/transactions" element={
+              <Suspense fallback={<RouteLoader routeName="transactions" />}>
+                <TransactionsPage />
+              </Suspense>
+            } />
+            <Route path="/categories" element={
+              <Suspense fallback={<RouteLoader routeName="categories" />}>
+                <CategoriesPage />
+              </Suspense>
+            } />
+            <Route path="/settings" element={
+              <Suspense fallback={<RouteLoader routeName="settings" />}>
+                <SettingsPage />
+              </Suspense>
+            } />
+            <Route path="/modify-categories" element={
+              <Suspense fallback={<RouteLoader routeName="modify-categories" />}>
+                <ModifyCategoriesPage />
+              </Suspense>
+            } />
           </Route>
         </Routes>
       </Suspense>
